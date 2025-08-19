@@ -1,61 +1,61 @@
 // 底部Tab栏样式
 .bottom-tab-bar {
-    // 基础定位与布局
-    position: fixed !important; // 使用fixed而非absolute，确保始终固定在视口底部
-    left: 0;
-    right: 0; // 左右都设为0，确保宽度充满屏幕
-    bottom: 0;
-    width: 100%;
-    height: 100px;
+  // 基础定位与布局
+  position: fixed !important; // 使用fixed而非absolute，确保始终固定在视口底部
+  left: 0;
+  right: 0; // 左右都设为0，确保宽度充满屏幕
+  bottom: 0;
+  width: 100%;
+  height: 100px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  box-sizing: border-box; // 确保padding和border不会增加总宽度
+  background-color: rgba(0, 0, 0, 0);
+  border-top: 0px solid #eee; // 只在顶部加边框，视觉上更自然
+  z-index: 999;
+  padding: 0 8px; // 适当留白
+  transform: none !important;
+  overflow: visible !important;
+
+  // Tab项样式
+  .tab-bar-item:nth-child(2) {
+    border-left: 7px solid #000;
+    border-right: 7px solid #000;
+  }
+
+  .tab-bar-item {
     display: flex;
-    flex-direction: row;
-    justify-content: space-around;
+    flex-direction: column;
     align-items: center;
-    box-sizing: border-box; // 确保padding和border不会增加总宽度
-    background-color: pink;
-    border-top: 1px solid #eee; // 只在顶部加边框，视觉上更自然
-    z-index: 999;
-    padding: 0 8px; // 适当留白
-    transform: none !important;
-    overflow: visible !important;
+    justify-content: center;
+    flex: 1; // 平均分配宽度
+    height: 100%;
+    cursor: pointer;
+    transition: all 0.5s ease; // 平滑过渡效果
+    transform: scale(1);
 
-    // Tab项样式
-    .tab-bar-item:nth-child(2) {
-        border-left: 1px solid #000;
-        border-right: 1px solid #000;
+    // 文字样式
+    .tab-text {
+      font-size: 40px;
+      color: rgb(255, 253, 223);
+      transition: all 0.2s ease;
     }
 
-    .tab-bar-item {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        flex: 1; // 平均分配宽度
-        height: 100%;
-        cursor: pointer;
-        transition: all 0.2s ease; // 平滑过渡效果
-
-
-        // 文字样式
-        .tab-text {
-            font-size: 40px;
-            color: #999; // 默认灰色
-            transition: all 0.2s ease;
-        }
-
-        // 选中状态（紫色高亮）
-        &.active {
-            .tab-text {
-                color: #9333ea;
-                /* 紫色 */
-                font-weight: 600;
-                /* 加粗突出显示 */
-            }
-        }
-
-        // 点击反馈
-        &:active {
-            opacity: 0.8;
-        }
+    // 选中状态
+    &.active {
+      .tab-text {
+        color: black;
+        /* 紫色 */
+        font-weight: 600;
+        /* 加粗突出显示 */
+      }
     }
+
+    // 点击反馈
+    &:active {
+      opacity: 0.8;
+    }
+  }
 }

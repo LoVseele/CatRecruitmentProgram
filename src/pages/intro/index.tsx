@@ -1,8 +1,8 @@
 import { View, Text } from "@tarojs/components";
-import BottomTabBar from '../../components/BottomTabBar';
-import Taro from '@tarojs/taro';
-import './index.scss';
-import { useEffect } from 'react';
+import BottomTabBar from "../../components/BottomTabBar";
+import Taro from "@tarojs/taro";
+import "../index.scss";
+import { useEffect } from "react";
 
 const IntroPage = () => {
   useEffect(() => {
