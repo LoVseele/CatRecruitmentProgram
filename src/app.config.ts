@@ -2,10 +2,7 @@
 export default {
   pages: ["pages/index/index"],
   window: {
-    backgroundTextStyle: "light",
-    navigationBarBackgroundColor: "#fff",
-    navigationBarTitleText: "WeChat",
-    navigationBarTextStyle: "black",
+    navigationStyle: "custom",
   },
   // 关键：仅保留 pagePath 和 text，删除 iconPath/selectedIconPath
   /*   tabBar: {

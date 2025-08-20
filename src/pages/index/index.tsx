@@ -23,7 +23,7 @@ const Index = () => {
         return <Intro />;
     }
   };
-  console.log(activeTab);
+
   return (
     <View className="page-container">
       {renderContent()}
