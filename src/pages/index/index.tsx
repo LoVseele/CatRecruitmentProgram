@@ -4,7 +4,7 @@ import "./index.scss";
 import BottomTabBar from "../../components/BottomTabBar/index";
 import Intro from "../intro/Intro";
 import Progress from "../progress/Progress";
-import Profile from "../profile/Profile";
+import ProLogic from "../profile/ProLogic"; 
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState<"intro" | "progress" | "profile">(
@@ -18,7 +18,7 @@ const Index = () => {
       case "progress":
         return <Progress />;
       case "profile":
-        return <Profile />;
+        return <ProLogic />;
       default:
         return <Intro />;
     }

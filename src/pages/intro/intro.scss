@@ -12,6 +12,7 @@
   color: black;
   opacity: 0.1;
   transition: opacity 0.6s ease-in-out;
+  padding: 0 10px;
 }
 
 .intro-item.active {
@@ -19,7 +20,7 @@
 }
 
 .intro-item-title {
-  font-size: 48px;
+  font-size: 46px;
   font-weight: 600;
 }
 
@@ -31,4 +32,7 @@
   display: block;
   font-size: 30px;
   line-height: 1.6;
+  margin-top: 10px;
+  text-indent: 2em;
+  padding: 0 10px;
 }
