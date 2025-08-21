@@ -1,6 +1,12 @@
 // src/app.config.ts
 export default {
-  pages: ["pages/index/index","pages/profile/ProLogic","pages/profile/registration/registration", "pages/profile/notifications1/notifications", "pages/profile/contact/contact"],// 目标页面（添加这一行）
+  pages: [
+    "pages/index/index",
+    "pages/profile/ProLogic",
+    "pages/profile/registration/registration",
+    "pages/profile/notifications/notifications",
+    "pages/profile/contact/contact",
+  ], // 目标页面（添加这一行）
   window: {
     navigationStyle: "custom",
   },
