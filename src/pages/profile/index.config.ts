@@ -1,3 +1,3 @@
 export default {
-    navigationBarTitleText: '个人'
-}
+  navigationBarTitleText: "个人",
+};

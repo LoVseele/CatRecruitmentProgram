@@ -1,11 +1,14 @@
 // src/app.config.ts
 export default {
-  pages: ["pages/index/index"],
+  pages: [
+    "pages/index/index",
+    "pages/profile/ProLogic",
+    "pages/profile/registration/registration",
+    "pages/profile/notifications/notifications",
+    "pages/profile/contact/contact",
+  ], // 目标页面（添加这一行）
   window: {
-    backgroundTextStyle: "light",
-    navigationBarBackgroundColor: "#fff",
-    navigationBarTitleText: "WeChat",
-    navigationBarTextStyle: "black",
+    navigationStyle: "custom",
   },
   // 关键：仅保留 pagePath 和 text，删除 iconPath/selectedIconPath
   /*   tabBar: {

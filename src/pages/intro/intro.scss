@@ -1,0 +1,38 @@
+.intro {
+  height: 70vh;
+  width: 94vw;
+}
+
+.intro-item {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  color: black;
+  opacity: 0.1;
+  transition: opacity 0.6s ease-in-out;
+  padding: 0 10px;
+}
+
+.intro-item.active {
+  opacity: 1;
+}
+
+.intro-item-title {
+  font-size: 46px;
+  font-weight: 600;
+}
+
+.intro-item-image {
+  flex-shrink: 0;
+}
+
+.intro-item-text {
+  display: block;
+  font-size: 30px;
+  line-height: 1.6;
+  margin-top: 10px;
+  text-indent: 2em;
+  padding: 0 10px;
+}
