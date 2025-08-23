@@ -1,15 +1,20 @@
-import { View, Text } from "@tarojs/components";
+import { View, Text, Image } from "@tarojs/components";
 import "./index.scss";
+import backgroundPic from '../../assets/images/xianluomao.png';
+import sanhuamao from '../../assets/images/sanhuamao.png';
+import jumao from '../../assets/images/jumao.png';
+
+type TabKey = "intro" | "progress" | "profile";
 
 interface Props {
-  activeKey: "intro" | "progress" | "profile";
-  onChange: (key: Props["activeKey"]) => void;
+  activeKey: TabKey;
+  onChange: (key: TabKey) => void;
 }
 
-const items: Array<{ key: Props["activeKey"]; text: string }> = [
-  { key: "intro", text: "介绍" },
-  { key: "progress", text: "进度" },
-  { key: "profile", text: "个人" },
+const items: Array<{ key: TabKey; text: string; icon: string }> = [
+  { key: "intro", text: "介绍", icon: backgroundPic },
+  { key: "progress", text: "进度", icon: sanhuamao },
+  { key: "profile", text: "个人", icon: jumao },
 ];
 
 export default function BottomTabBar({ activeKey, onChange }: Props) {
@@ -21,9 +26,15 @@ export default function BottomTabBar({ activeKey, onChange }: Props) {
           className={`tab-bar-item ${activeKey === i.key ? "active" : ""}`}
           onClick={() => onChange(i.key)}
         >
+          <Image
+            src={i.icon}
+            className="tab-icon"
+            mode="widthFix"
+          />
           <Text className="tab-text">{i.text}</Text>
         </View>
       ))}
     </View>
   );
 }
+
