@@ -17,10 +17,7 @@ export default function Intro() {
       >
         {blocks.map((item, index) => (
           <SwiperItem key={index}>
-            <View
-              className={`intro-item ${current === index ? "active" : ""}`}
-              style={{ backgroundColor: item.color }}
-            >
+            <View className={`intro-item ${current === index ? "active" : ""}`}>
               <View className="intro-item-title">{item.title}</View>
               {item.image && (
                 <Image

@@ -1,38 +1,38 @@
 page {
-    background-color: rgb(255, 243, 197);
+  background-color: rgb(255, 243, 197);
 }
 
 .page-header {
-    height: 170px;
-    width: 100%;
-    background-color: rgb(221, 189, 62);
+  height: 170rpx;
+  width: 100%;
+  background-color: rgb(221, 189, 62);
 }
 
 .title {
-    float: left;
-    font-weight: 700;
-    margin-bottom: 70px;
-    margin-top: 100px;
-    font-size: 40px;
-    margin-left: 208px;
+  float: left;
+  font-weight: 700;
+  margin-bottom: 70rpx;
+  margin-top: 100rpx;
+  font-size: 40rpx;
+  margin-left: 208rpx;
 }
 
 .back-btn {
-    float: left;
-    background-color: rgb(221, 189, 62);
-    margin-top: 80px;
-    font-size: 35px;
+  float: left;
+  background-color: rgb(221, 189, 62);
+  margin-top: 80rpx;
+  font-size: 35rpx;
 }
 
 wx-button:after {
-    border: none !important;
+  border: none !important;
 }
 
 .content {
-    float: left;
-    display: block;
-    font-size: 34px;
-    text-align: center;
-    text-indent: 2em;
-    margin: 100px 40px;
+  float: left;
+  display: block;
+  font-size: 34rrpx;
+  text-align: center;
+  text-indent: 2em;
+  margin: 100rrpx 40rrpx;
 }

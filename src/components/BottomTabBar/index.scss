@@ -1,16 +1,16 @@
 .bottom-tab-bar {
   position: fixed;
   left: 0;
-  right: 0;
   bottom: 0;
-  height: 100px;
+  height: 110rpx;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-around;
   background: transparent;
-  // border-top: 1px solid #eee;
   z-index: 1000;
-  padding-bottom: env(safe-area-inset-bottom);
+  padding-top: 20rpx;
+  padding-bottom: 4vh;
 }
 
 .tab-bar-item {
@@ -19,31 +19,30 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  transition: transform 0.2s ease, color 0.2s ease;
-  border-radius: 20px;
+  transition: all 0.2s ease;
+  border-radius: 20rpx;
   background: linear-gradient(#ffffff, yellow);
-  border: #000 solid 2px;
-  height: 100px;
-  width: 200px;
-  box-shadow: 5px 5px 5px;
+  border: #000 solid 2rpx;
+  height: 100rpx;
+  width: 200rpx;
+  box-shadow: 5rpx 5rpx 5rpx;
 }
 
 .tab-text {
   display: block;
-  font-size: 32px;
-  letter-spacing: 5px;
+  font-size: 32rpx;
+  letter-spacing: 5rpx;
 }
 
 .tab-bar-item.active {
-  transform: scale(1.15);
+  transform: scale(1.08);
   font-weight: 600;
   color: #000;
-  box-shadow: 10px 10px 10px;
+  box-shadow: 10rpx 10rpx 10rpx;
 }
 
 .tab-icon {
-  // 确保图标清晰
-  width: 50px;
-  height: 40px;
+  height: 50rpx;
+  width: 50rpx;
   object-fit: contain;
 }

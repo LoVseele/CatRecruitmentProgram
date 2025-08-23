@@ -32,6 +32,7 @@ const ProView: FC<ProProps> = ({
 }) => (
   <View className="page-content">
     {/* 使用自定义组件，或直接给 src 传空字符串（需处理占位） */}
+
     <CustomImage className="avatar" src="" />
     <Text className="name">姓名:</Text>
     <View className="list">

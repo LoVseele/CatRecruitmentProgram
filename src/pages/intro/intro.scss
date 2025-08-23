@@ -7,12 +7,12 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 20rpx;
   align-items: center;
   color: black;
   opacity: 0.1;
   transition: opacity 0.6s ease-in-out;
-  padding: 0 10px;
+  padding: 0 10rpx;
 }
 
 .intro-item.active {
@@ -20,7 +20,7 @@
 }
 
 .intro-item-title {
-  font-size: 46px;
+  font-size: 46rpx;
   font-weight: 600;
 }
 
@@ -30,9 +30,9 @@
 
 .intro-item-text {
   display: block;
-  font-size: 30px;
+  font-size: 30rpx;
   line-height: 1.6;
-  margin-top: 10px;
+  margin-top: 10rpx;
   text-indent: 2em;
-  padding: 0 10px;
+  padding: 0 10rpx;
 }

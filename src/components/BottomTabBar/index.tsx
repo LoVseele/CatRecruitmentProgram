@@ -1,8 +1,8 @@
 import { View, Text, Image } from "@tarojs/components";
 import "./index.scss";
-import backgroundPic from '../../assets/images/xianluomao.png';
-import sanhuamao from '../../assets/images/sanhuamao.png';
-import jumao from '../../assets/images/jumao.png';
+import backgroundPic from "../../assets/images/xianluomao.png";
+import sanhuamao from "../../assets/images/sanhuamao.png";
+import jumao from "../../assets/images/jumao.png";
 
 type TabKey = "intro" | "progress" | "profile";
 
@@ -26,15 +26,10 @@ export default function BottomTabBar({ activeKey, onChange }: Props) {
           className={`tab-bar-item ${activeKey === i.key ? "active" : ""}`}
           onClick={() => onChange(i.key)}
         >
-          <Image
-            src={i.icon}
-            className="tab-icon"
-            mode="widthFix"
-          />
+          <Image src={i.icon} className="tab-icon" mode="widthFix" />
           <Text className="tab-text">{i.text}</Text>
         </View>
       ))}
     </View>
   );
 }
-
