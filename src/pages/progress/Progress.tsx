@@ -1,7 +1,7 @@
-// pages/intro/Intro.tsx
-import { View, Text , Image} from "@tarojs/components";
+import { View, Text, Image } from "@tarojs/components";
 import "./progress.scss";
 import proCat from '../../assets/images/process_cat.png'
+import { FC } from "react";
 
 interface StageInfo {
   state: string | number; // 状态标识（可以是字符串或数字）
@@ -21,15 +21,23 @@ const stageData: StageInfo[] = [
 
 const stage = stageData[0];
 
-const Intro = () => (
+// 定义视图组件接收的属性类型
+interface ProProps {
+  onGoToRegistration: () => void;
+}
+
+// 纯视图组件，只负责渲染UI和触发事件
+const Intro: FC<ProProps> = ({
+  onGoToRegistration,
+}) => (
   <View className="progress">
     <View className="progress-show">
-      <Image 
-      src={proCat}
-      className="proCat"
+      <Image
+        src={proCat}
+        className="proCat"
       ></Image>
     </View>
-    <View className="progress-content">
+    <View className="progress-content" onClick={onGoToRegistration}>
       <Text>当前阶段: {stage.text}</Text>
       <Text>{stage.intro}</Text>
     </View>

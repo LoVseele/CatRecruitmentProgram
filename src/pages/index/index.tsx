@@ -3,7 +3,7 @@ import { useState } from "react";
 import "./index.scss";
 import BottomTabBar from "../../components/BottomTabBar/index";
 import Intro from "../intro/Intro";
-import Progress from "../progress/Progress";
+import ProLogic2 from "../progress/Progresslogic";
 import ProLogic from "../profile/ProLogic";
 
 const Index = () => {
@@ -16,7 +16,7 @@ const Index = () => {
       case "intro":
         return <Intro />;
       case "progress":
-        return <Progress />;
+        return <ProLogic2 />;
       case "profile":
         return <ProLogic />;
       default:
