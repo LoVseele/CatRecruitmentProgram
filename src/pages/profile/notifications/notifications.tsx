@@ -20,7 +20,7 @@ const notifications: FC = () => {
 
             <View className="content">
                 {/* 页面内容区域 */}
-                <Text>这里是报名信息的具体内容,这里是报名信息的具体内容,这里是报名信息的具体内容,这里是报名信息的具体内容,</Text>
+                <Text>暂时没有通知哦...</Text>
                 {/* 可以添加表单、列表等组件 */}
             </View>
         </View>
