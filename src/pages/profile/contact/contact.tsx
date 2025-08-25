@@ -1,8 +1,9 @@
-import { View, Text, Button } from '@tarojs/components';
+import { View, Text, Button , Image} from '@tarojs/components';
 import { FC } from 'react';
 import Taro from '@tarojs/taro';
 import './contact.scss'; // 页面样式
 import '../../../assets/font_5005005_riasjpvkzb/iconfont.css';
+import contactPic from '../../../assets/images/contact.jpg'
 
 // 报名信息页面组件
 const contact: FC = () => {
@@ -18,10 +19,20 @@ const contact: FC = () => {
                 <Text className="title">联系我们</Text>
             </View>
 
-            <View className="content">
-                {/* 页面内容区域 */}
-                <Text>这里是报名信息的具体内容,这里是报名信息的具体内容,这里是报名信息的具体内容,这里是报名信息的具体内容,这里是报名信息的具体内容</Text>
-                {/* 可以添加表单、列表等组件 */}
+            <View className="contact">
+                <View className='contact-pic-box'>
+                    <Text>欢迎加入招新Q群</Text>
+                    <Text>有任何疑问欢迎进群咨询</Text>
+                    <Image
+                        src={contactPic}
+                        className='contact-pic'
+                    ></Image>
+                </View>
+                <View className='contact-content'>
+                    <Text>社恐? 不想进群?</Text>
+                    <Text>欢迎直接和师兄师姐们电话联系!</Text>
+                    <Text>联系电话:15015944299</Text>
+                </View>
             </View>
         </View>
     );

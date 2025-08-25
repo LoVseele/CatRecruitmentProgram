@@ -28,11 +28,43 @@ wx-button:after {
   border: none !important;
 }
 
-.content {
-  float: left;
-  display: block;
+.contact {
+  display: flex;
+  flex-direction: column;
   font-size: 34rpx;
+  align-items: center;
   text-align: center;
-  text-indent: 2em;
+  justify-content: center;
   margin: 100rpx 40rpx;
+}
+
+.contact-pic-box {
+  align-content: center;
+  border-radius: 20rpx;
+  background-color: rgb(255, 213, 33);
+  padding: 0 30rpx;
+  margin-bottom: 200rpx;
+  box-shadow: 20rpx 20rpx 10rpx 0 gray;
+}
+
+.contact Text {
+  display: block;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-size: 40rpx;
+}
+
+.contact-pic {
+  width: 600rpx;
+  height: 700rpx;
+  margin-bottom: 10rpx;
+}
+
+.contact-content {
+  background-color: rgb(255, 213, 33);
+  align-content: center;
+  justify-content: center;
+  width: 660rpx;
+  height: auto;
+  border-radius: 20rpx;
+  box-shadow: 20rpx 20rpx 10rpx 0 gray;
 }
