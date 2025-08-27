@@ -12,11 +12,20 @@ const ProLogic2: FC = () => {
             console.error("跳转报名信息失败:", err);
         });
     };
+    //预约页面跳转
+    const handleGoToInterview = () => {
+        Taro.navigateTo({
+            url: "/pages/progress/interview/interview"
+        }).catch((err) => {
+            console.error('预约页面跳转失败:', err)
+        })
+    }
 
     // 将事件处理函数传递给视图组件
     return (
         <Intro
             onGoToRegistration={handleGoToRegistration}
+            onGoToInterview={handleGoToInterview}
         />
     );
 };
