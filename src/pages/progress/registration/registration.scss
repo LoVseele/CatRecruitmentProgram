@@ -33,7 +33,7 @@ wx-button:after {
   display: block;
   font-size: 34rpx;
   text-align: center;
-  text-indent: 2em;
+  // text-indent: 2em;
   margin: 100rpx 40rpx;
 }
 
@@ -80,6 +80,7 @@ wx-button:after {
 
 .picker {
   position: relative;
+  text-indent: 2em;
 
   .picker-view {
     min-height: 40rpx;
