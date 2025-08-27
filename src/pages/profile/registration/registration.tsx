@@ -43,6 +43,8 @@ const Registration: FC = () => {
                 <Text className="title">报名信息</Text>
             </View>
 
+            <Text className='notice'>填下这张表,C.A.T工作室下一个 “显眼包” 就是你</Text>
+
             <View className="content">
                 <Form onSubmit={formSubmit} onReset={formReset} className="form-container">
                     {/* 姓名输入  */}
