@@ -21,8 +21,10 @@ const contact: FC = () => {
 
             <View className="contact">
                 <View className='contact-pic-box'>
-                    <Text>欢迎加入招新Q群</Text>
-                    <Text>有任何疑问欢迎进群咨询</Text>
+                    <View className='contact-pic-content'>
+                        <Text>欢迎加入招新Q群</Text>
+                        <Text>有任何疑问欢迎进群咨询</Text>
+                    </View>
                     <Image
                         src={contactPic}
                         className='contact-pic'

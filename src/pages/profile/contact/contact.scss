@@ -39,11 +39,12 @@ wx-button:after {
 }
 
 .contact-pic-box {
+  width: 600rpx;
   align-content: center;
   border-radius: 20rpx;
   background-color: rgb(255, 213, 33);
   padding: 0 30rpx;
-  margin-bottom: 200rpx;
+  margin-bottom: 150rpx;
   box-shadow: 20rpx 20rpx 10rpx 0 gray;
 }
 
@@ -51,12 +52,18 @@ wx-button:after {
   display: block;
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   font-size: 40rpx;
+  line-height: 55rpx;
+}
+
+.contact-pic-content{
+  margin-top:40rpx;
 }
 
 .contact-pic {
-  width: 600rpx;
-  height: 700rpx;
-  margin-bottom: 10rpx;
+  width: 500rpx;
+  height: 600rpx;
+  margin: 40rpx 0;
+  border-radius: 20rpx;
 }
 
 .contact-content {
