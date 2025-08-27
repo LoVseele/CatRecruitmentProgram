@@ -1,7 +1,7 @@
 import { View, Text, Button, Input, Picker, Textarea, Form } from '@tarojs/components';
 import { FC, useState } from 'react';
 import Taro from '@tarojs/taro';
-import './registration.scss';
+import '../../progress/registration/registration.scss';
 import '../../../assets/font_5005005_riasjpvkzb/iconfont.css';
 
 // 报名信息页面组件
