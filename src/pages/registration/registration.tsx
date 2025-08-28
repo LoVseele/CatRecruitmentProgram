@@ -10,6 +10,7 @@ import {
 import { FC, useState } from "react";
 import Taro from "@tarojs/taro";
 import "./registration.scss";
+import "../index.scss";
 import "../../assets/font_5005005_riasjpvkzb/iconfont.css";
 
 // 报名信息页面组件

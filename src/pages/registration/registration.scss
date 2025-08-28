@@ -5,32 +5,6 @@ page {
   flex-direction: column;
 }
 
-.page-header {
-  height: 170rpx;
-  width: 100%;
-  background-color: rgb(254, 213, 48);
-  position: relative;
-}
-
-.title {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  font-weight: 700;
-  font-size: 40rpx;
-  margin: 0;
-}
-
-.back-btn {
-  position: absolute;
-  left: 30rpx;
-  top: 50%;
-  transform: translateY(-50%);
-  background-color: rgb(254, 213, 48);
-  font-size: 35rpx;
-}
-
 wx-button:after {
   border: none !important;
 }
