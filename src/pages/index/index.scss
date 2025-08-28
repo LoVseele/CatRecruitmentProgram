@@ -5,8 +5,12 @@
   background: url("../../assets/images/backgroundPic.jpg") no-repeat center
     center;
   background-size: cover;
+  overflow: hidden;
 }
-
+.swiper-container {
+  width: 100%;
+  overflow: hidden;
+}
 /* 内容区域需要留出底部导航栏的空间，避免被遮住 */
 .content {
   flex: 1;
