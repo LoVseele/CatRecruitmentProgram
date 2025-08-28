@@ -7,7 +7,7 @@ const ProLogic: FC = () => {
   // 报名信息页面跳转逻辑
   const handleGoToRegistration = () => {
     Taro.navigateTo({
-      url: "/pages/profile/registration/registration",
+      url: "/pages/registration/registration",
     }).catch((err) => {
       console.error("跳转报名信息失败:", err);
     });
