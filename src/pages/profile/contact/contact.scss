@@ -2,6 +2,32 @@ page {
   background-color: rgb(255, 243, 197);
 }
 
+.page-header {
+  height: 170rpx;
+  width: 100%;
+  background-color: rgb(221, 189, 62);
+}
+
+.title {
+  float: left;
+  font-weight: 700;
+  margin-bottom: 70rpx;
+  margin-top: 100rpx;
+  font-size: 40rpx;
+  margin-left: 208rpx;
+}
+
+.back-btn {
+  float: left;
+  background-color: rgb(221, 189, 62);
+  margin-top: 80rpx;
+  font-size: 35rpx;
+}
+
+wx-button:after {
+  border: none !important;
+}
+
 .contact {
   display: flex;
   flex-direction: column;
@@ -24,13 +50,13 @@ page {
 
 .contact Text {
   display: block;
-  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   font-size: 40rpx;
   line-height: 55rpx;
 }
 
-.contact-pic-content {
-  margin-top: 40rpx;
+.contact-pic-content{
+  margin-top:40rpx;
 }
 
 .contact-pic {
