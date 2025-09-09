@@ -1,17 +1,15 @@
 import axios, { AxiosInstance } from "axios";
 import Taro from "@tarojs/taro";
 
-const BASE_DOMAIN = "http://127.0.0.1:4523";
-
-//  m1 前缀的接口
 export const api: AxiosInstance = axios.create({
-  baseURL: `${BASE_DOMAIN}/m1/7054402-6774545-default`,
+  baseURL: "http://127.0.0.1:4523/m1/7054402-6774545-default",
   timeout: 10000,
   headers: { "Content-Type": "application/json" },
 });
 
 // 通用拦截器
 const setupInterceptors = (instance: AxiosInstance) => {
+  //请求拦截器
   instance.interceptors.request.use(
     (config) => {
       Taro.showLoading({ title: "加载中..." });
@@ -28,6 +26,7 @@ const setupInterceptors = (instance: AxiosInstance) => {
     }
   );
 
+  //响应拦截器
   instance.interceptors.response.use(
     (response) => {
       Taro.hideLoading();

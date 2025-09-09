@@ -17,7 +17,6 @@ import type {
 /*
  * @description 用户登录
  * @param {LoginParams} queryParams - 请求参数
- * @param {AuthHeader} headerParams - 请求头
  */
 export const userLogin = (
   queryParams: LoginParams,
@@ -30,7 +29,6 @@ export const userLogin = (
 };
 
 //获取所有面试时间
-
 export const getAllInterviewTime = () => {
   return api.post<ApiResponse<InterviewTime[]>>(
     "/api/wx/interviews/getInterviewTime"
@@ -40,7 +38,6 @@ export const getAllInterviewTime = () => {
 /*
  * @description 获取用户自己的信息
  * @param {UserInfoParams} queryParams - 请求参数
- * @param {AuthHeader} headerParams - 请求头
  */
 export const getSelfInfo = (
   queryParams: UserInfoParams,
@@ -55,30 +52,23 @@ export const getSelfInfo = (
 /*
  * @description 用户预约面试
  * @param {AppointmentParams} queryParams - 请求参数
- * @param {AuthHeader} headerParams - 请求头
  */
 export const userAppointment = (
   queryParams?: AppointmentParams,
   headerParams?: AuthHeader
 ) => {
-  return api.post<ApiResponse<null>>(
-    "/api/wx/interviews/appointments",
-    undefined,
-    {
-      params: queryParams,
-      headers: headerParams as AxiosHeaders,
-    }
-  );
+  return api.post<ApiResponse<null>>("/api/wx/interviews/appointments", {
+    params: queryParams,
+    headers: headerParams as AxiosHeaders,
+  });
 };
 
 /*
  * @description 获取预约状态
- * @param {AuthHeader} header - 请求头
  */
 export const getAppointmentState = (header?: AuthHeader) => {
   return api.post<ApiResponse<string | null>>(
     "/api/wx/interviews/getAppointmentState",
-    {},
     {
       headers: header as AxiosHeaders,
     }
@@ -89,12 +79,12 @@ export const getAppointmentState = (header?: AuthHeader) => {
  * @description 用户填写个人信息
  * @param {UserApplyParams} params - 请求参数
  */
-export const userApply = (params: UserApplyParams) => {
-  return api.post<ApiResponse<null>>(
-    "/api/wx/apply",
-    {},
-    {
-      params: params,
-    }
-  );
+export const userApply = (
+  params: UserApplyParams,
+  headerParams?: AuthHeader
+) => {
+  return api.post<ApiResponse<null>>("/api/wx/apply", {
+    params: params,
+    headers: headerParams as AxiosHeaders,
+  });
 };
