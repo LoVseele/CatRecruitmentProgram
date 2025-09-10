@@ -45,6 +45,7 @@
     "@tarojs/runtime": "4.1.5",
     "@tarojs/shared": "4.1.5",
     "@tarojs/taro": "^4.1.5",
+    "abort-controller": "^3.0.0",
     "antd": "^5.27.0",
     "axios-miniprogram-adapter": "^0.3.5",
     "react": "^18.3.1",

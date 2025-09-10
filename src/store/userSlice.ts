@@ -31,13 +31,13 @@ export const login = createAsyncThunk<LoginResponse, LoginParams>(
     // 这里的 response 是完整的 AxiosResponse
     const response = await userLogin(params);
     // 我们的业务数据在 response.data 中
-    if (response.data.code === 0) {
-      Taro.setStorageSync("token", response.data.data.token);
+    if (response.code === 200) {
+      Taro.setStorageSync("token", response.data.token);
       // thunk 成功时，返回业务数据中的 data 字段
-      return response.data.data;
+      return response.data;
     }
     // thunk 失败时，拒绝并返回业务 message
-    return Promise.reject(new Error(response.data.message));
+    return Promise.reject(new Error(response.message));
   }
 );
 

@@ -1,4 +1,5 @@
 // src/app.ts
+import "abortcontroller-polyfill/dist/abortcontroller-polyfill-only";
 
 import { Component, PropsWithChildren } from "react";
 import { Provider } from "react-redux"; // 引入 Provider
