@@ -19,11 +19,13 @@ import type {
  * @param {LoginParams} queryParams - 请求参数
  */
 export const userLogin = (
-  queryParams: LoginParams,
+  params: LoginParams,
   headerParams?: AuthHeader
-) => {
-  return api.get<ApiResponse<LoginResponse>>("/api/wx/login", {
-    params: queryParams,
+): Promise<ApiResponse<LoginResponse>> => {
+  // 1. 确认使用 api.get 方法
+  // 2. 将 params 对象直接作为请求的查询参数 (axios 会处理)
+  return api.get("/api/wx/login", {
+    params: params,
     headers: headerParams as AxiosHeaders,
   });
 };

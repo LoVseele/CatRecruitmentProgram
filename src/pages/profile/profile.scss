@@ -34,12 +34,8 @@
   top: 700rpx;
   transform: translate(-50%, -50%);
   display: flex;
-  /* 开启 Flexbox 布局 */
-  /* 关键：设置为垂直排列（默认是 row 水平） */
   flex-direction: column;
-  /* 可选：让盒子之间有间距 */
   border-radius: 10rpx;
-  /* 圆角 */
   gap: 50rpx;
   border: 2rpx solid rgb(255, 213, 33);
 }

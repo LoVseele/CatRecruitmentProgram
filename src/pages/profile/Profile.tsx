@@ -1,40 +1,44 @@
-import { View, Text, Image } from "@tarojs/components";
+import { View, Text, Image, Button } from "@tarojs/components";
 import { FC } from "react";
-import "../index.scss";
 import "./profile.scss";
+import UserAvatar from "../../assets/images/logo.png"; // 引入一个默认头像
 
-// 定义视图组件接收的属性类型
+// 更新视图组件接收的属性类型
 interface ProProps {
+  loggedIn: boolean;
+  onLogin: () => void;
+  onLogout: () => void;
   onGoToRegistration: () => void;
   onGoToNotifications: () => void;
   onGoToContact: () => void;
 }
 
-// 定义图片组件的属性类型
-interface ImageProps {
-  src?: string; // 让 src 变为可选
-  className: string;
-}
-
-const CustomImage: FC<ImageProps> = ({ src, className }) =>
-  // 如果 src 为空，可以渲染占位图或不渲染
-  src ? (
-    <Image className={className} src={src} />
-  ) : (
-    <View className={className} />
-  );
-
 // 纯视图组件，只负责渲染UI和触发事件
 const ProView: FC<ProProps> = ({
+  loggedIn,
+  onLogin,
+  onLogout,
   onGoToRegistration,
   onGoToNotifications,
   onGoToContact,
 }) => (
   <View className="page-content">
-    {/* 使用自定义组件，或直接给 src 传空字符串（需处理占位） */}
+    <Image className="avatar" src={UserAvatar} />
+    {loggedIn ? (
+      // --- 已登录状态 ---
+      <View className="name">
+        <Text>欢迎回来！</Text>
+        {/* 这里可以显示真实用户名 */}
+      </View>
+    ) : (
+      // --- 未登录状态 ---
+      <View className="login-prompt">
+        <Button size="mini" className="login-btn" onClick={onLogin}>
+          点击登录
+        </Button>
+      </View>
+    )}
 
-    <CustomImage className="avatar" src="" />
-    <Text className="name">姓名:</Text>
     <View className="list">
       <View className="list-item list-item1" onClick={onGoToRegistration}>
         报名信息
@@ -46,6 +50,13 @@ const ProView: FC<ProProps> = ({
         联系我们
       </View>
     </View>
+
+    {/* 只有在登录后才显示退出按钮 */}
+    {loggedIn && (
+      <Button className="logout-button" onClick={onLogout}>
+        退出登录
+      </Button>
+    )}
   </View>
 );
 
