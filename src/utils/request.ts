@@ -13,7 +13,7 @@ export const api: AxiosInstance = axios.create({
 
 // 通用拦截器
 const setupInterceptors = (instance: AxiosInstance) => {
-  //请求拦截器 (保持不变)
+  //请求拦截器
   instance.interceptors.request.use(
     (config) => {
       Taro.showLoading({ title: "加载中..." });
@@ -30,7 +30,7 @@ const setupInterceptors = (instance: AxiosInstance) => {
     }
   );
 
-  // --- ↓↓↓ 修改这里的响应拦截器 ↓↓↓ ---
+  // 响应拦截器
   instance.interceptors.response.use(
     (response) => {
       Taro.hideLoading();
@@ -50,7 +50,6 @@ const setupInterceptors = (instance: AxiosInstance) => {
           errorMessage = error.response.data.message; // 优先使用后端返回的错误消息
         }
       } else if (error.request) {
-        // 请求已发出，但没有收到响应
         errorMessage = "无法连接到服务器";
       }
 
@@ -59,7 +58,6 @@ const setupInterceptors = (instance: AxiosInstance) => {
       return Promise.reject(error);
     }
   );
-  // --- ↑↑↑ 修改结束 ↑↑↑ ---
 };
 
 setupInterceptors(api);

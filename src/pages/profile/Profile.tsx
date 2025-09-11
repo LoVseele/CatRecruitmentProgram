@@ -2,10 +2,12 @@ import { View, Text, Image, Button } from "@tarojs/components";
 import { FC } from "react";
 import "./profile.scss";
 import UserAvatar from "../../assets/images/logo.png"; // 引入一个默认头像
+import { User } from "@/api/types";
 
 // 更新视图组件接收的属性类型
 interface ProProps {
   loggedIn: boolean;
+  userInfo: User | null;
   onLogin: () => void;
   onLogout: () => void;
   onGoToRegistration: () => void;
@@ -16,6 +18,7 @@ interface ProProps {
 // 纯视图组件，只负责渲染UI和触发事件
 const ProView: FC<ProProps> = ({
   loggedIn,
+  userInfo,
   onLogin,
   onLogout,
   onGoToRegistration,
@@ -24,11 +27,10 @@ const ProView: FC<ProProps> = ({
 }) => (
   <View className="page-content">
     <Image className="avatar" src={UserAvatar} />
-    {loggedIn ? (
+    {loggedIn && userInfo ? (
       // --- 已登录状态 ---
       <View className="name">
-        <Text>欢迎回来！</Text>
-        {/* 这里可以显示真实用户名 */}
+        <Text>欢迎回来！{userInfo.name || "新同学"}</Text>
       </View>
     ) : (
       // --- 未登录状态 ---

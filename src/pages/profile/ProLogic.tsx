@@ -9,7 +9,7 @@ import { RootState, AppDispatch } from "../../store";
 import { logout } from "../../store/userSlice";
 
 const ProLogic: FC = () => {
-  const { token } = useSelector((state: RootState) => state.user);
+  const { token, userInfo } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch<AppDispatch>();
 
   const [loginModalVisible, setLoginModalVisible] = useState(false);
@@ -59,11 +59,12 @@ const ProLogic: FC = () => {
       console.error("跳转联系我们失败:", err);
     });
   };
-
+  console.log(userInfo);
   return (
     <>
       <ProView
         loggedIn={loggedIn}
+        userInfo={userInfo}
         onLogin={handleLogin}
         onLogout={handleLogout}
         onGoToRegistration={handleGoToRegistration}
