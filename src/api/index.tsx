@@ -18,22 +18,34 @@ import type {
  * @description 用户登录
  * @param {LoginParams} queryParams - 请求参数
  */
+/** 将可能的 header 值规范成普通对象 { [k: string]: string } */
+function normalizeHeaders(h?: AuthHeader): Record<string, string> {
+  if (!h) return {};
+  const out: Record<string, string> = {};
+  for (const key of Object.keys(h as Record<string, any>)) {
+    const val = (h as Record<string, any>)[key];
+    if (val === undefined || val === null) continue;
+    out[key] = typeof val === "string" ? val : String(val);
+  }
+  return out;
+}
+
 export const userLogin = (
   params: LoginParams,
   headerParams?: AuthHeader
 ): Promise<ApiResponse<LoginResponse>> => {
-  // 1. 确认使用 api.get 方法
-  // 2. 将 params 对象直接作为请求的查询参数 (axios 会处理)
   return api.get("/api/wx/login", {
-    params: params,
-    headers: headerParams as AxiosHeaders,
+    params,
+    headers: normalizeHeaders(headerParams),
   });
 };
 
 //获取所有面试时间
-export const getAllInterviewTime = () => {
+export const getAllInterviewTime = (headerParams?: AuthHeader) => {
   return api.post<ApiResponse<InterviewTime[]>>(
-    "/api/wx/interviews/getInterviewTime"
+    "/api/wx/interviews/getInterviewTime",
+    {},
+    { headers: (headerParams as AxiosHeaders) ?? {} }
   );
 };
 
@@ -59,20 +71,24 @@ export const userAppointment = (
   queryParams?: AppointmentParams,
   headerParams?: AuthHeader
 ) => {
-  return api.post<ApiResponse<null>>("/api/wx/interviews/appointments", {
-    params: queryParams,
-    headers: headerParams as AxiosHeaders,
-  });
+  return api.post<ApiResponse<null>>(
+    "/api/wx/interviews/appointments",
+    queryParams, // data 放这里
+    {
+      headers: (headerParams as AxiosHeaders) || {},
+    }
+  );
 };
 
 /*
  * @description 获取预约状态
  */
-export const getAppointmentState = (header?: AuthHeader) => {
+export const getAppointmentState = (headerParams?: AuthHeader) => {
   return api.post<ApiResponse<string | null>>(
     "/api/wx/interviews/getAppointmentState",
+    {},
     {
-      headers: header as AxiosHeaders,
+      headers: headerParams as AxiosHeaders,
     }
   );
 };
@@ -85,8 +101,11 @@ export const userApply = (
   params: UserApplyParams,
   headerParams?: AuthHeader
 ) => {
-  return api.post<ApiResponse<null>>("/api/wx/apply", {
-    params: params,
-    headers: headerParams as AxiosHeaders,
-  });
+  return api.post<ApiResponse<null>>(
+    "/api/wx/apply",
+    params, // data
+    {
+      headers: (headerParams as AxiosHeaders) || {},
+    }
+  );
 };
