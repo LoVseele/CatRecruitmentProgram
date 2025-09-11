@@ -1,10 +1,4 @@
 // src/api/types.ts
-
-/* 通用请求头 */
-export interface AuthHeader {
-  Authorization?: string;
-}
-
 /* 通用响应结构 */
 export interface ApiResponse<T> {
   code: number;
