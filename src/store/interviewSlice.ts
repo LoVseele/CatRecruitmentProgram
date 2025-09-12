@@ -27,12 +27,12 @@ export const fetchInterviewTimes = createAsyncThunk<InterviewTime[]>(
     // 这里的 response 是完整的 AxiosResponse
     const response = await getAllInterviewTime();
     // 我们的业务数据在 response.data 中
-    if (response.data.code === 0) {
+    if (response.code === 200) {
       // thunk 成功时，返回业务数据中的 data 字段
-      return response.data.data;
+      return response.data;
     }
     // thunk 失败时，拒绝并返回业务 message
-    return Promise.reject(new Error(response.data.message));
+    return Promise.reject(new Error(response.message));
   }
 );
 
@@ -41,21 +41,21 @@ export const bookAppointment = createAsyncThunk<
   AppointmentParams
 >("interview/book", async (params, { dispatch }) => {
   const response = await userAppointment(params);
-  if (response.data.code === 0) {
+  if (response.code === 200) {
     dispatch(fetchAppointmentState());
     return params.appointmentId;
   }
-  return Promise.reject(new Error(response.data.message));
+  return Promise.reject(new Error(response.message));
 });
 
 export const fetchAppointmentState = createAsyncThunk<string | null>(
   "interview/fetchState",
   async () => {
     const response = await getAppointmentState();
-    if (response.data.code === 0) {
-      return response.data.data;
+    if (response.code === 200) {
+      return response.data;
     }
-    return Promise.reject(new Error(response.data.message));
+    return Promise.reject(new Error(response.message));
   }
 );
 

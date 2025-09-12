@@ -28,15 +28,11 @@ const initialState: UserState = {
 export const login = createAsyncThunk<LoginResponse, LoginParams>(
   "user/login",
   async (params) => {
-    // 这里的 response 是完整的 AxiosResponse
     const response = await userLogin(params);
-    // 我们的业务数据在 response.data 中
     if (response.code === 200) {
       Taro.setStorageSync("token", response.data.token);
-      // thunk 成功时，返回业务数据中的 data 字段
       return response.data;
     }
-    // thunk 失败时，拒绝并返回业务 message
     return Promise.reject(new Error(response.message));
   }
 );
@@ -45,10 +41,10 @@ export const fetchUserInfo = createAsyncThunk<User, UserInfoParams>(
   "user/fetchInfo",
   async (params) => {
     const response = await getSelfInfo(params);
-    if (response.data.code === 0) {
-      return response.data.data;
+    if (response.code === 200) {
+      return response.data;
     }
-    return Promise.reject(new Error(response.data.message));
+    return Promise.reject(new Error(response.message));
   }
 );
 
@@ -56,14 +52,14 @@ export const applyInfo = createAsyncThunk<void, UserApplyParams>(
   "user/applyInfo",
   async (params, { dispatch, getState }) => {
     const response = await userApply(params);
-    if (response.data.code === 0) {
+    if (response.code === 200) {
       const { user } = getState() as RootState;
       if (user.userInfo?.openId) {
         // dispatch action to refetch user info
         dispatch(fetchUserInfo({ openId: user.userInfo.openId }));
       }
     } else {
-      return Promise.reject(new Error(response.data.message));
+      return Promise.reject(new Error(response.message));
     }
   }
 );

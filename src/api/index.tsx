@@ -24,18 +24,19 @@ export const userLogin = (
 /*
  * @description 获取所有面试时间
  */
-export const getAllInterviewTime = () => {
-  return api.post<ApiResponse<InterviewTime[]>>(
-    "/api/wx/interviews/getInterviewTime",
-    null
-  );
+export const getAllInterviewTime = (): Promise<
+  ApiResponse<InterviewTime[]>
+> => {
+  return api.post("/api/wx/interviews/getInterviewTime", null);
 };
 
 /*
  * @description 获取用户自己的信息
  */
-export const getSelfInfo = (queryParams: UserInfoParams) => {
-  return api.get<ApiResponse<User>>("/api/wx/getInformation", {
+export const getSelfInfo = (
+  queryParams: UserInfoParams
+): Promise<ApiResponse<User>> => {
+  return api.get("/api/wx/getInformation", {
     params: queryParams,
   });
 };
@@ -43,26 +44,24 @@ export const getSelfInfo = (queryParams: UserInfoParams) => {
 /*
  * @description 用户预约面试
  */
-export const userAppointment = (queryParams?: AppointmentParams) => {
-  return api.post<ApiResponse<null>>(
-    "/api/wx/interviews/appointments",
-    queryParams
-  );
+export const userAppointment = (
+  queryParams?: AppointmentParams
+): Promise<ApiResponse<null>> => {
+  return api.post("/api/wx/interviews/appointments", queryParams);
 };
 
 /*
  * @description 获取预约状态
  */
-export const getAppointmentState = () => {
-  return api.post<ApiResponse<string | null>>(
-    "/api/wx/interviews/getAppointmentState",
-    null
-  );
+export const getAppointmentState = (): Promise<ApiResponse<string | null>> => {
+  return api.post("/api/wx/interviews/getAppointmentState", null);
 };
 
 /*
  * @description 用户填写个人信息
  */
-export const userApply = (params: UserApplyParams) => {
-  return api.post<ApiResponse<null>>("/api/wx/apply", params);
+export const userApply = (
+  params: UserApplyParams
+): Promise<ApiResponse<null>> => {
+  return api.post("/api/wx/apply", params);
 };
