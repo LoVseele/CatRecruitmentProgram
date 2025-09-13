@@ -31,13 +31,14 @@ export const login = createAsyncThunk<LoginResponse, LoginParams>(
     const response = await userLogin(params);
     if (response.code === 200) {
       Taro.setStorageSync("token", response.data.token);
+      Taro.setStorageSync("openId", response.data.user.openId);
       return response.data;
     }
     return Promise.reject(new Error(response.message));
   }
 );
 
-export const fetchUserInfo = createAsyncThunk<User, UserInfoParams>(
+export const fetchUserInfo = createAsyncThunk<User, string>(
   "user/fetchInfo",
   async (params) => {
     const response = await getSelfInfo(params);
@@ -56,7 +57,7 @@ export const applyInfo = createAsyncThunk<void, UserApplyParams>(
       const { user } = getState() as RootState;
       if (user.userInfo?.openId) {
         // dispatch action to refetch user info
-        dispatch(fetchUserInfo({ openId: user.userInfo.openId }));
+        dispatch(fetchUserInfo(user.userInfo.openId));
       }
     } else {
       return Promise.reject(new Error(response.message));

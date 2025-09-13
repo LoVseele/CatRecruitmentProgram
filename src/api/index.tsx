@@ -34,13 +34,13 @@ export const getAllInterviewTime = (): Promise<
  * @description 获取用户自己的信息
  */
 export const getSelfInfo = (
-  queryParams: UserInfoParams
+  openId: string
 ): Promise<ApiResponse<User>> => {
   return api.get("/api/wx/getInformation", {
-    params: queryParams,
+    params: { openId: openId } // 关键：用对象包裹参数，key 为后端约定的参数名（这里是 openId）
+    // 简化写法（当参数名和变量名相同时）：params: { openId }
   });
 };
-
 /*
  * @description 用户预约面试
  */
