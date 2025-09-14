@@ -4,7 +4,7 @@ import Taro from '@tarojs/taro';
 import { AppDispatch } from '../../../store';
 import { useDispatch, useSelector } from 'react-redux';
 import { getSelfInfo, userApply } from '../../../api/index';
-import { fetchUserInfo, applyInfo } from '../../../store/userSlice'; // 导入fetchUserInfo action
+import { fetchUserInfo } from '../../../store/userSlice'; // 导入fetchUserInfo action
 import '../../progress/registration/registration.scss';
 import '../../../assets/font_5005005_riasjpvkzb/iconfont.css';
 import type { RootState } from '../../../store';
