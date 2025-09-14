@@ -5,7 +5,6 @@ import { userLogin, getSelfInfo, userApply } from "../api";
 import type {
   User,
   LoginParams,
-  UserInfoParams,
   UserApplyParams,
   LoginResponse,
 } from "../api/types";

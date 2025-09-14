@@ -76,6 +76,7 @@ const Registration: FC = () => {
                 selfIntroduction: userInfo.userIntro
             });
             // 设置方向选择器索引
+            console.log('获取的用户信息为:',userInfo)
             const dirIndex = directions.findIndex(
                 item => item.name === userInfo.direction
             );
@@ -85,20 +86,20 @@ const Registration: FC = () => {
         }
     }, [userInfo, directions, status, error]);
 
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         const openId = Taro.getStorageSync('openId');
-    //         if (openId) {
-    //             // 强制重新获取最新用户信息
-    //             await dispatch(fetchUserInfo({ openId }) as any);
-    //         } else {
-    //             Taro.showToast({ title: '请先登录', icon: 'none' });
-    //         }
-    //     };
+    useEffect(() => {
+        const fetchData = async () => {
+            const openId = Taro.getStorageSync('openId');
+            if (openId) {
+                // 强制重新获取最新用户信息
+                await dispatch(fetchUserInfo(openId) );
+            } else {
+                Taro.showToast({ title: '请先登录', icon: 'none' });
+            }
+        };
 
-    //     // 组件挂载和重新进入时都执行
-    //     fetchData();
-    // }, [dispatch]);
+        // 组件挂载和重新进入时都执行
+        fetchData();
+    }, [dispatch]);
 
     // 错误处理
     useEffect(() => {
@@ -193,7 +194,7 @@ const Registration: FC = () => {
 
             <Text className='notice'>填下这张表,C.A.T工作室下一个 “显眼包” 就是你</Text>
 
-            <View className="content">
+            <View className="content">  
                 {loading ? (
                     <Text>加载中...</Text>  // 加载状态提示
                 ) : (
