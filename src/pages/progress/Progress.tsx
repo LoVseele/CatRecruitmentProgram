@@ -20,7 +20,7 @@ const stageData: StageInfo[] = [
   { state: "offer", text: "成功录取", intro: "恭喜你成为C.A.T的成员 !", style: { bottom: '23%', left: '89%' } }
 ];
 
-const stage = stageData[0];
+const stage = stageData[2];
 
 // 定义视图组件接收的属性类型
 interface ProProps {
