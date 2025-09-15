@@ -5,7 +5,6 @@ import type {
   LoginParams,
   LoginResponse,
   User,
-  UserInfoParams,
   AppointmentParams,
   ApiResponse,
   UserApplyParams,
