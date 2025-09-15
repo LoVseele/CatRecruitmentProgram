@@ -110,7 +110,7 @@ const Registration: FC = () => {
 
     // 表单提交
     const formSubmit = async (e) => {
-        // 防止重复提交s
+        // 防止重复提交
         if (submitting) return;
 
         // 获取表单数据并处理

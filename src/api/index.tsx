@@ -27,7 +27,7 @@ export const userLogin = (
 export const getAllInterviewTime = (): Promise<
   ApiResponse<InterviewTime[]>
 > => {
-  return api.post("/api/wx/interviews/getInterviewTime", null);
+  return api.get("/api/wx/interviews/getInterviewTime");
 };
 
 /*

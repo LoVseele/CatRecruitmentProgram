@@ -4,9 +4,10 @@ import Taro from '@tarojs/taro';
 import './interview.scss';
 import '../../../assets/font_5005005_riasjpvkzb/iconfont.css';
 import { InterviewTime } from "../../../api/types";
+import { getAllInterviewTime } from "../../../api/index";
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchInterviewTimes } from "../../../store/interviewSlice";
-import { RootState } from '../../../store/index'; // 假设你有 RootState 类型定义
+import { RootState } from '../../../store/index';
 
 // 定义处理后的数据类型（适配页面展示）
 interface ProcessedInterviewData {
@@ -15,7 +16,7 @@ interface ProcessedInterviewData {
         interviewTime: string;
         interviewNumber: number;
         interviewCurrentNumber: number;
-        id: string; // 用于预约接口传递ID
+        id: string;
     }>;
 }
 
@@ -30,31 +31,28 @@ const Interview: FC = () => {
         id: string;
     } | null>(null);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
-    const [loading, setLoading] = useState<boolean>(true); // 加载状态(loading 是状态的当前值，setLoading 是用于更新 loading 状态的函数)
-    const [errorMsg, setErrorMsg] = useState<string>(''); // 错误提示
-    const dispatch = useDispatch();
-    const interviewTimes = useSelector((state: RootState) => state.interview.times);
-    // 页面加载时获取数据（实际项目中替换为接口请求）
+    const [loading, setLoading] = useState<boolean>(true);
+    const [errorMsg, setErrorMsg] = useState<string>('');
+
+    // 页面加载时获取数据
     useEffect(() => {
         const loadData = async () => {
             try {
                 setLoading(true);
-                console.log('开始获取面试时间数据');
-                const resultAction = await dispatch(fetchInterviewTimes() as any);
-
-                console.log('Redux action 结果:', resultAction);
-
-                if (fetchInterviewTimes.fulfilled.match(resultAction)) {
-                    console.log('原始接口数据:', resultAction.payload);
-                    const processedData = processRawInterviewData(resultAction.payload);
-                    console.log('处理后的数据:', processedData);
+                // 直接使用 getAllInterviewTime 获取数据
+                const response = await getAllInterviewTime();
+                console.log('API响应:', response);
+                // 检查响应结构
+                if (response && response.code === 200 && response.data) {
+                    const processedData = processRawInterviewData(response.data);
                     setInterviewData(processedData);
+                    setErrorMsg('');
                 } else {
-                    console.error('获取数据失败:', resultAction.error);
-                    setErrorMsg('获取数据失败');
+                    console.error('API响应格式错误:', response);
+                    setErrorMsg('数据格式错误，请稍后重试');
                 }
             } catch (error) {
-                console.error('异常:', error);
+                console.error('获取数据异常:', error);
                 setErrorMsg(error instanceof Error ? error.message : '获取数据失败');
             } finally {
                 setLoading(false);
@@ -62,48 +60,61 @@ const Interview: FC = () => {
         };
 
         loadData();
-    }, [dispatch]);
+    }, []);
 
-    // 3. 处理原始接口数据：转换为页面展示格式
-    const processRawInterviewData = (rawData: InterviewTime[]): ProcessedInterviewData[] => {
-        // 按日期分组
+    // 处理原始接口数据
+    const processRawInterviewData = (rawData: any[]): ProcessedInterviewData[] => {
         const dateMap = new Map<string, ProcessedInterviewData['times']>();
 
         rawData.forEach(item => {
-            // 格式化日期（去除时间部分，仅保留YYYY-MM-DD）
+            // 格式化日期
             const interviewDate = item.appointmentDate.split('T')[0];
-            // 格式化时间范围（HH:mm-HH:mm）
+
+            // 格式化时间范围
             const startTime = formatTime(item.startTime);
             const endTime = formatTime(item.endTime);
             const interviewTime = `${startTime}-${endTime}`;
 
-            // 转换字符串数值为数字（确保计算正确）
+            // 转换数值
             const interviewNumber = parseInt(item.capacity, 10) || 0;
             const interviewCurrentNumber = parseInt(item.appointedCount, 10) || 0;
 
-            // 按日期分组存储
             if (!dateMap.has(interviewDate)) {
                 dateMap.set(interviewDate, []);
             }
+
             dateMap.get(interviewDate)?.push({
                 interviewTime,
                 interviewNumber,
                 interviewCurrentNumber,
-                id: item.id // 保留接口返回的ID，用于后续预约
+                id: item.id.toString(),
             });
         });
 
-        // 转换为数组格式
-        return Array.from(dateMap.entries()).map(([interviewDate, times]) => ({
-            interviewDate,
-            times
-        }));
+        // 按日期排序
+        return Array.from(dateMap.entries())
+            .map(([interviewDate, times]) => ({
+                interviewDate,
+                times: times.sort((a, b) => a.interviewTime.localeCompare(b.interviewTime))
+            }))
+            .sort((a, b) => a.interviewDate.localeCompare(b.interviewDate));
     };
 
-    // 辅助函数：格式化时间（将ISO格式转换为HH:mm）
+    // 辅助函数：格式化时间
     const formatTime = (isoTime: string): string => {
-        const date = new Date(isoTime);
-        return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+        try {
+            const date = new Date(isoTime);
+            return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+        } catch (error) {
+            console.error('时间格式化错误:', isoTime, error);
+            return '00:00';
+        }
+    };
+
+    // 计算剩余人数
+    const getRemaining = (time: typeof selectedTime) => {
+        if (!time) return 0;
+        return time.interviewNumber - time.interviewCurrentNumber;
     };
 
     // 返回上一页
@@ -121,11 +132,11 @@ const Interview: FC = () => {
     };
 
     // 选择时间
-    const handleTimeSelect = (time: typeof selectedTime) => {
+    const handleTimeSelect = (time: any) => {
         setSelectedTime(time);
     };
 
-    // 显示确认弹窗（需同时选中日期和时间）
+    // 显示确认弹窗
     const handleShowConfirm = () => {
         if (selectedDate && selectedTime) {
             setShowConfirmModal(true);
@@ -136,7 +147,6 @@ const Interview: FC = () => {
                 duration: 1500
             });
         }
-
     };
 
     // 取消预约
@@ -147,23 +157,19 @@ const Interview: FC = () => {
     // 确认预约
     const handleConfirm = () => {
         if (selectedDate && selectedTime) {
-            // 调用预约接口的逻辑
+            console.log('预约信息:', {
+                date: selectedDate,
+                time: selectedTime,
+                id: selectedTime.id
+            });
+
             Taro.showToast({
                 title: '预约成功',
                 icon: 'success',
                 duration: 2000
             });
             setShowConfirmModal(false);
-            // 可以在这里重置选择或跳转页面
-            // setSelectedDate('');
-            // setSelectedTime(null);
         }
-    };
-
-    // 计算剩余人数
-    const getRemaining = (time: typeof selectedTime) => {
-        if (!time) return 0; //因为time可能为null
-        return time.interviewNumber - time.interviewCurrentNumber;
     };
 
     return (
@@ -192,69 +198,80 @@ const Interview: FC = () => {
             )}
 
             {/* 主要内容区 */}
-            <View className="interview-content">
-                {/* 日期选择 */}
-                <View className="date-selector">
-                    <Text className="form-label">选择日期</Text>
-                    <Picker
-                        range={interviewData.map(item => item.interviewDate)}
-                        onChange={handleDateSelect}
-                    >
-                        <View className="picker-display">
-                            {selectedDate || '请选择日期'}
-                            <Text className="iconfont arrow-icon">&#xe602;</Text>
-                        </View>
-                    </Picker>
-                </View>
-
-                {/* 时间选择列表 */}
-                {selectedDate && (
-                    <View className="time-selector">
-                        <Text className="form-label">选择时间</Text>
-                        <View className="time-list">
-                            {interviewData
-                                .find(item => item.interviewDate === selectedDate)
-                                ?.times.map((time, index) => {
-                                    const remaining = getRemaining(time);
-                                    const isSelected = selectedTime?.interviewTime === time.interviewTime;
-
-                                    return (
-                                        <View
-                                            key={index}
-                                            className={`time-item ${isSelected ? 'selected' : ''}`}
-                                            onClick={() => handleTimeSelect(time)}
-                                        >
-                                            <View className="time-info">
-                                                <Text className="time-text">{time.interviewTime}</Text>
-                                                <Text className="remaining-text">
-                                                    剩余 {remaining} 人
-                                                </Text>
-                                            </View>
-
-                                            {/* 仅当有剩余名额时显示选择按钮 */}
-                                            {remaining > 0 && (
-                                                <Button className="select-btn">选择</Button>
-                                            )}
-                                        </View>
-                                    );
-                                })}
-                        </View>
+            {!loading && !errorMsg && interviewData.length > 0 && (
+                <View className="interview-content">
+                    {/* 日期选择 */}
+                    <View className="date-selector">
+                        <Text className="form-label">选择日期</Text>
+                        <Picker
+                            range={interviewData.map(item => item.interviewDate)}
+                            onChange={handleDateSelect}
+                        >
+                            <View className="picker-display">
+                                {selectedDate || '请选择日期'}
+                                <Text className="iconfont arrow-icon">&#xe602;</Text>
+                            </View>
+                        </Picker>
                     </View>
-                )}
 
-                {/* 确认预约按钮 */}
-                {selectedTime && getRemaining(selectedTime) > 0 && (
-                    <Button
-                        className="confirm-btn"
-                        onClick={handleShowConfirm}
-                    >
-                        确认预约
-                    </Button>
-                )}
-            </View>
+                    {/* 时间选择列表 */}
+                    {selectedDate && (
+                        <View className="time-selector">
+                            <Text className="form-label">选择时间段</Text>
+                            <View className="time-list">
+                                {interviewData
+                                    .find(item => item.interviewDate === selectedDate)
+                                    ?.times.map((time, index) => {
+                                        const remaining = getRemaining(time);
+                                        const isSelected = selectedTime?.id === time.id;
+                                        const isFull = remaining <= 0;
 
-            {/* 确认弹窗  */}
-            {showConfirmModal && (
+                                        return (
+                                            <View
+                                                key={time.id}
+                                                className={`time-item ${isSelected ? 'selected' : ''} ${isFull ? 'full' : ''}`}
+                                                onClick={() => !isFull && handleTimeSelect(time)}
+                                            >
+                                                <View className="time-info">
+                                                    <Text className="time-range">{time.interviewTime}</Text>
+                                                    <Text className="remaining-text">
+                                                        {isFull ? '已满员' : ` 剩余 ${remaining} 人`}
+                                                    </Text>
+                                                </View>
+
+                                                {!isFull && (
+                                                    <Button className="select-btn">
+                                                        {isSelected ? '已选择' : '选择'}
+                                                    </Button>
+                                                )}
+                                            </View>
+                                        );
+                                    })}
+                            </View>
+                        </View>
+                    )}
+
+                    {/* 确认预约按钮 */}
+                    {selectedTime && getRemaining(selectedTime) > 0 && (
+                        <Button
+                            className="confirm-btn"
+                            onClick={handleShowConfirm}
+                        >
+                            确认预约
+                        </Button>
+                    )}
+                </View>
+            )}
+
+            {/* 空数据状态 */}
+            {!loading && !errorMsg && interviewData.length === 0 && (
+                <View className="empty-state">
+                    <Text>暂无可用面试时间</Text>
+                </View>
+            )}
+
+            {/* 确认弹窗 */}
+            {showConfirmModal && selectedTime && (
                 <View className="custom-modal-overlay">
                     <View className="custom-modal">
                         <View className="modal-header">
@@ -262,25 +279,18 @@ const Interview: FC = () => {
                         </View>
 
                         <View className="modal-body">
-                            {selectedDate && (
-                                <View className="modal-info">
-                                    <Text className="info-label">日期：</Text>
-                                    <Text>{selectedDate}</Text>
-                                </View>
-                            )}
-
-                            {selectedTime && (
-                                <>
-                                    <View className="modal-info">
-                                        <Text className="info-label">时间：</Text>
-                                        <Text>{selectedTime.interviewTime}</Text>
-                                    </View>
-                                    <View className="modal-info">
-                                        <Text className="info-label">剩余人数：</Text>
-                                        <Text>{getRemaining(selectedTime)}</Text>
-                                    </View>
-                                </>
-                            )}
+                            <View className="modal-info">
+                                <Text className="info-label">日期：</Text>
+                                <Text>{selectedDate}</Text>
+                            </View>
+                            <View className="modal-info">
+                                <Text className="info-label">时间：</Text>
+                                <Text>{selectedTime.interviewTime}</Text>
+                            </View>
+                            <View className="modal-info">
+                                <Text className="info-label">剩余名额：</Text>
+                                <Text>{getRemaining(selectedTime)} 人</Text>
+                            </View>
                         </View>
 
                         <View className="modal-footer">
@@ -288,16 +298,10 @@ const Interview: FC = () => {
                                 取消
                             </Button>
                             <Button className="modal-btn confirm-btn" onClick={handleConfirm}>
-                                确认
+                                确认预约
                             </Button>
                         </View>
                     </View>
-                </View>
-            )}
-            {/* 空数据状态 */}
-            {!loading && !errorMsg && interviewData.length === 0 && (
-                <View className="empty-state">
-                    <Text>暂无可用面试时间</Text>
                 </View>
             )}
         </View>
