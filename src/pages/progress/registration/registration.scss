@@ -15,7 +15,7 @@ page {
 .title {
   position: absolute;
   left: 50%;
-  top: 50%;
+  top: 70%;
   transform: translate(-50%, -50%);
   font-weight: 700;
   font-size: 40rpx;
@@ -24,8 +24,8 @@ page {
 
 .back-btn {
   position: absolute;
-  left: 30rpx;
-  top: 50%;
+  left: 20rpx;
+  top: 70%;
   transform: translateY(-50%);
   background-color: rgb(221, 189, 62);
   font-size: 35rpx;

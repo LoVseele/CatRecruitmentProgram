@@ -9,18 +9,21 @@ page {
 }
 
 .title {
-  float: left;
+  position: absolute;
+  left: 50%;
+  top: 70%;
+  transform: translate(-50%, -50%);
   font-weight: 700;
-  margin-bottom: 70rpx;
-  margin-top: 100rpx;
   font-size: 40rpx;
-  margin-left: 208rpx;
+  margin: 0;
 }
 
 .back-btn {
-  float: left;
+  position: absolute;
+  left: 20rpx;
+  top: 70%;
+  transform: translateY(-50%);
   background-color: rgb(221, 189, 62);
-  margin-top: 80rpx;
   font-size: 35rpx;
 }
 
@@ -55,8 +58,8 @@ wx-button:after {
   line-height: 55rpx;
 }
 
-.contact-pic-content{
-  margin-top:40rpx;
+.contact-pic-content {
+  margin-top: 40rpx;
 }
 
 .contact-pic {
