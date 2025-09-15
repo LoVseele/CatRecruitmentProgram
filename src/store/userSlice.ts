@@ -64,6 +64,30 @@ export const applyInfo = createAsyncThunk<void, UserApplyParams>(
   }
 );
 
+// 新增: 应用初始化时的认证逻辑
+export const initializeAuth = createAsyncThunk<User | null, void>(
+  "user/initializeAuth",
+  async (_, { dispatch, getState }) => {
+    const { user } = getState() as RootState;
+    const token = Taro.getStorageSync("token");
+    const openId = Taro.getStorageSync("openId");
+
+    if (token && openId && !user.userInfo) {
+      // 如果有 token 和 openId 但 Redux 中没有用户信息，则去获取
+      try {
+        const userInfo = await dispatch(fetchUserInfo(openId)).unwrap();
+        return userInfo;
+      } catch (error) {
+        // 获取失败则清除 token
+        Taro.removeStorageSync("token");
+        Taro.removeStorageSync("openId");
+        return null;
+      }
+    }
+    return user.userInfo; // 如果已有用户信息，则直接返回
+  }
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -73,6 +97,7 @@ const userSlice = createSlice({
       state.token = null;
       state.status = "idle";
       Taro.removeStorageSync("token");
+      Taro.removeStorageSync("openId"); // 同时清除 openId
     },
   },
   extraReducers: (builder) => {
@@ -99,6 +124,11 @@ const userSlice = createSlice({
       .addCase(fetchUserInfo.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message || "获取用户信息失败";
+      })
+      // 新增: 处理 initializeAuth 的状态
+      .addCase(initializeAuth.fulfilled, (state, action) => {
+        state.userInfo = action.payload;
+        state.status = "succeeded";
       });
   },
 });

@@ -6,9 +6,13 @@ import { Provider } from "react-redux"; // 引入 Provider
 import { store } from "./store"; // 引入 store
 import "./sdk";
 import "./app.scss";
+import { initializeAuth } from "./store/userSlice"; // 导入 initializeAuth
 
 class App extends Component<PropsWithChildren> {
-  componentDidMount() {}
+  componentDidMount() {
+    // 在应用加载时，执行认证初始化逻辑
+    store.dispatch(initializeAuth());
+  }
 
   componentDidShow() {}
 
