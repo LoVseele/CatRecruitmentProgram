@@ -1,4 +1,3 @@
-// src/utils/request.ts
 import axios, { AxiosAdapter, AxiosInstance } from "axios";
 import Taro from "@tarojs/taro";
 import mpAdapter from "axios-miniprogram-adapter";

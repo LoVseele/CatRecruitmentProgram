@@ -1,5 +1,3 @@
-// src/components/LoginModal/index.tsx
-
 import { View, Button } from "@tarojs/components";
 import Taro from "@tarojs/taro";
 import { useDispatch } from "react-redux";
@@ -24,18 +22,15 @@ const LoginModal = ({ visible, onClose, onLoginSuccess }: LoginModalProps) => {
           dispatch(login({ code: res.code }))
             .unwrap()
             .then(() => {
-              // 登录成功后执行
               Taro.showToast({
                 title: "登录成功",
                 icon: "success",
               });
               onLoginSuccess(); // 调用父组件传入的回调
-              onClose(); // 关闭弹窗
+              onClose();
             })
             .catch((error: any) => {
-              // 登录失败后执行
               Taro.showToast({
-                // error.message 来自 userSlice 中 Promise.reject 返回的错误信息
                 title: error.message || "登录失败",
                 icon: "none",
               });

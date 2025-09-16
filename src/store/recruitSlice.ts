@@ -1,4 +1,3 @@
-// src/store/recruitSlice.ts
 import { createSlice } from "@reduxjs/toolkit";
 
 // 定义用户在招新流程中所处的阶段

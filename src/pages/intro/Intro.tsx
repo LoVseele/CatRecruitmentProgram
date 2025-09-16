@@ -12,7 +12,7 @@ export default function Intro() {
       <Swiper
         className="intro"
         vertical
-        duration={600} // 保持滑动动画时间
+        duration={600}
         onChange={(e) => setCurrent(e.detail.current)}
       >
         {blocks.map((item, index) => (

@@ -3,7 +3,7 @@ import { useState } from "react";
 import "./index.scss";
 import BottomTabBar from "../../components/BottomTabBar/index";
 import Intro from "../intro/Intro";
-import ProLogic2 from "../progress/Progresslogic";
+import PageJumpProLogic from "../progress/Progresslogic";
 import ProLogic from "../profile/ProLogic";
 
 // 定义标签页顺序映射
@@ -44,7 +44,7 @@ const Index = () => {
           <Intro />
         </SwiperItem>
         <SwiperItem>
-          <ProLogic2 />
+          <PageJumpProLogic />
         </SwiperItem>
         <SwiperItem>
           <ProLogic />

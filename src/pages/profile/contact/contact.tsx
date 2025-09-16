@@ -9,7 +9,7 @@ import contactPic from '../../../assets/images/contact.jpg'
 const contact: FC = () => {
     // 返回上一页的逻辑
     const handleGoBack = () => {
-        Taro.navigateBack(); // 返回上一页
+        Taro.navigateBack();
     };
 
     return (

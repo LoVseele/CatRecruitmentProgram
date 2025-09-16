@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchInterviewTimes } from "../../../store/interviewSlice";
 import { RootState } from '../../../store/index';
 
-// 定义处理后的数据类型（适配页面展示）
+// 定义处理后的数据类型
 interface ProcessedInterviewData {
     interviewDate: string;
     times: Array<{
@@ -39,7 +39,6 @@ const Interview: FC = () => {
         const loadData = async () => {
             try {
                 setLoading(true);
-                // 直接使用 getAllInterviewTime 获取数据
                 const response = await getAllInterviewTime();
                 console.log('API响应:', response);
                 // 检查响应结构
@@ -157,6 +156,23 @@ const Interview: FC = () => {
     // 确认预约
     const handleConfirm = () => {
         if (selectedDate && selectedTime) {
+            // 1. 更新本地状态中的剩余数量（核心修改）
+            setInterviewData(prev => prev.map(dateItem => {
+                if (dateItem.interviewDate === selectedDate) {
+                    return {
+                        ...dateItem,
+                        times: dateItem.times.map(time => {
+                            if (time.id === selectedTime.id) {
+                                // 已预约人数+1，剩余数量会通过getRemaining自动计算减少
+                                return { ...time, interviewCurrentNumber: time.interviewCurrentNumber + 1 };
+                            }
+                            return time;
+                        })
+                    };
+                }
+                return dateItem;
+            }));
+
             console.log('预约信息:', {
                 date: selectedDate,
                 time: selectedTime,

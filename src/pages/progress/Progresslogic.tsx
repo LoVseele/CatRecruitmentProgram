@@ -3,7 +3,7 @@ import Taro from "@tarojs/taro";
 import Intro from "./Progress";
 
 // 逻辑组件，处理所有业务逻辑
-const ProLogic2: FC = () => {
+const PageJumpProLogic: FC = () => {
     // 报名信息页面跳转逻辑
     const handleGoToRegistration = () => {
         Taro.navigateTo({
@@ -30,4 +30,4 @@ const ProLogic2: FC = () => {
     );
 };
 
-export default ProLogic2;
+export default PageJumpProLogic;

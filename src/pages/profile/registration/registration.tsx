@@ -4,7 +4,7 @@ import Taro from '@tarojs/taro';
 import { AppDispatch } from '../../../store';
 import { useDispatch, useSelector } from 'react-redux';
 import { getSelfInfo, userApply } from '../../../api/index';
-import { fetchUserInfo } from '../../../store/userSlice'; // 导入fetchUserInfo action
+import { fetchUserInfo } from '../../../store/userSlice';
 import '../../progress/registration/registration.scss';
 import '../../../assets/font_5005005_riasjpvkzb/iconfont.css';
 import type { RootState } from '../../../store';
@@ -23,7 +23,6 @@ interface FormDataType {
 // 报名信息页面组件
 const Registration: FC = () => {
     const dispatch = useDispatch<AppDispatch>();
-    // 从Redux获取用户信息和状态
     const { userInfo, status, error } = useSelector((state: RootState) => state.user);
     const loading = status === 'loading';
     const openId = Taro.getStorageSync('openId');
@@ -31,7 +30,7 @@ const Registration: FC = () => {
 
     // 返回上一页的逻辑
     const handleGoBack = () => {
-        Taro.navigateBack(); // 返回上一页
+        Taro.navigateBack();
     };
 
     const [directions] = useState([
@@ -196,7 +195,7 @@ const Registration: FC = () => {
 
             <View className="content">  
                 {loading ? (
-                    <Text>加载中...</Text>  // 加载状态提示
+                    <Text>加载中...</Text>
                 ) : (
                     <Form onSubmit={formSubmit} onReset={formReset} className="form-container">
                         {/* 姓名输入  */}

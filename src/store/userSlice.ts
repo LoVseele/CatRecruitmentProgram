@@ -55,7 +55,6 @@ export const applyInfo = createAsyncThunk<void, UserApplyParams>(
     if (response.code === 200) {
       const { user } = getState() as RootState;
       if (user.userInfo?.openId) {
-        // dispatch action to refetch user info
         dispatch(fetchUserInfo(user.userInfo.openId));
       }
     } else {
