@@ -1,7 +1,7 @@
 import { View, Text, Image, Button } from "@tarojs/components";
 import { FC } from "react";
 import "./profile.scss";
-import UserAvatar from "../../assets/images/logo.png"; // 引入一个默认头像
+import UserAvatar from "../../assets/images/avatar.png"; // 引入一个默认头像
 import { User } from "@/api/types";
 
 // 更新视图组件接收的属性类型
@@ -55,7 +55,7 @@ const ProView: FC<ProProps> = ({
 
     {/* 只有在登录后才显示退出按钮 */}
     {loggedIn && (
-      <Button className="logout-button" onClick={onLogout}>
+      <Button size="mini" className="logout-btn" onClick={onLogout}>
         退出登录
       </Button>
     )}

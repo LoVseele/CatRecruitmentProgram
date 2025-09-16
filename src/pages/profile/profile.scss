@@ -62,8 +62,19 @@
 }
 
 .login-btn {
+  position: absolute;
   background-color: rgb(253, 251, 236);
-  margin-left: 298rpx;
-  margin-top: 307rpx;
+  left: 50%;
+  top: 307rpx;
+  transform: translateX(-50%);
+  border: 1rpx solid black;
+}
+
+.logout-btn {
+  position: absolute;
+  background-color: rgb(253, 251, 236);
+  left: 50%;
+  top: 360rpx;
+  transform: translateX(-50%);
   border: 1rpx solid black;
 }
