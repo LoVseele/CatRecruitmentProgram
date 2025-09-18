@@ -1,4 +1,5 @@
 import { api } from "../utils/request";
+import Taro from '@tarojs/taro';
 import type {
   LoginParams,
   LoginResponse,
@@ -35,9 +36,19 @@ export const getSelfInfo = (
 export const userAppointment = (
   queryParams?: AppointmentParams
 ): Promise<ApiResponse<null>> => {
-  return api.post("/api/wx/interviews/appointments", queryParams);
-};
+  const token = Taro.getStorageSync('token') || '';
 
+  return api.post(
+    "/api/wx/interviews/appointments",
+    null,
+    {
+      params: queryParams, // 将参数放在 Query 中（对应 @RequestParam）
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    }
+  );
+};
 /*获取预约状态*/
 export const getAppointmentState = (): Promise<ApiResponse<string | null>> => {
   return api.post("/api/wx/interviews/getAppointmentState", null);

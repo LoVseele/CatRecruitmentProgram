@@ -61,7 +61,7 @@ export interface UserApplyParams {
 
 /* 面试时间信息 */
 export interface InterviewTime {
-  id: string;
+  id: number;
   accessType: string;
   appointmentDate: string;
   startTime: string;
@@ -72,5 +72,5 @@ export interface InterviewTime {
 
 /* 用户预约接口 Query 参数 */
 export interface AppointmentParams {
-  appointmentId?: number;
+  appointmentId: number;
 }

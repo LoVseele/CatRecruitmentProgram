@@ -3,12 +3,12 @@ import { FC, useState, useEffect } from 'react';
 import Taro from '@tarojs/taro';
 import './interview.scss';
 import '../../../assets/font_5005005_riasjpvkzb/iconfont.css';
-import { InterviewTime } from "../../../api/types";
+import { InterviewTime, AppointmentParams } from "../../../api/types";
 import { getAllInterviewTime } from "../../../api/index";
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchInterviewTimes } from "../../../store/interviewSlice";
+import { fetchInterviewTimes, bookAppointment } from "../../../store/interviewSlice";
 import { RootState } from '../../../store/index';
-
+import { AppDispatch } from '../../../store'; // 导入正确的dispatch类型
 // 定义处理后的数据类型
 interface ProcessedInterviewData {
   interviewDate: string;
@@ -16,10 +16,9 @@ interface ProcessedInterviewData {
     interviewTime: string;
     interviewNumber: number;
     interviewCurrentNumber: number;
-    id: string;
+    id: number;
   }>;
 }
-
 const Interview: FC = () => {
   // 状态管理
   const [interviewData, setInterviewData] = useState<ProcessedInterviewData[]>([]);
@@ -28,12 +27,17 @@ const Interview: FC = () => {
     interviewTime: string;
     interviewNumber: number;
     interviewCurrentNumber: number;
-    id: string;
+    id: number;
   } | null>(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [errorMsg, setErrorMsg] = useState<string>('');
+  const [submitting, setSubmitting] = useState<boolean>(false); // 新增：提交状态
 
+  // 从 Redux 获取预约状态（可选）
+  const { userAppointmentId } = useSelector((state: RootState) => state.interview);
+  // 使用正确的dispatch类型
+  const dispatch = useDispatch<AppDispatch>();
   // 页面加载时获取数据
   useEffect(() => {
     const loadData = async () => {
@@ -86,7 +90,7 @@ const Interview: FC = () => {
         interviewTime,
         interviewNumber,
         interviewCurrentNumber,
-        id: item.id.toString(),
+        id: parseInt(item.id, 10) || 0, // 转为数字（确保是有效数字）
       });
     });
 
@@ -153,38 +157,63 @@ const Interview: FC = () => {
     setShowConfirmModal(false);
   };
 
-  // 确认预约
-  const handleConfirm = () => {
-    if (selectedDate && selectedTime) {
-      // 1. 更新本地状态中的剩余数量（核心修改）
-      setInterviewData(prev => prev.map(dateItem => {
-        if (dateItem.interviewDate === selectedDate) {
-          return {
-            ...dateItem,
-            times: dateItem.times.map(time => {
-              if (time.id === selectedTime.id) {
-                // 已预约人数+1，剩余数量会通过getRemaining自动计算减少
-                return { ...time, interviewCurrentNumber: time.interviewCurrentNumber + 1 };
-              }
-              return time;
-            })
-          };
-        }
-        return dateItem;
-      }));
+  // 确认预约（修改为调用接口）
+  const handleConfirm = async () => {
+    if (selectedDate && selectedTime && !submitting) {
+      setSubmitting(true);
+      try {
+        // 准备预约参数
+        const appointmentParams= {
+          appointmentId: selectedTime.id,
+        };
+        console.log('传到后端的预约信息:', appointmentParams);
+        // 调用Redux异步操作
+        await dispatch(bookAppointment(appointmentParams)).unwrap();
 
-      console.log('预约信息:', {
-        date: selectedDate,
-        time: selectedTime,
-        id: selectedTime.id
-      });
+        // 更新本地状态中的剩余数量
+        setInterviewData(prev => prev.map(dateItem => {
+          if (dateItem.interviewDate === selectedDate) {
+            return {
+              ...dateItem,
+              times: dateItem.times.map(time => {
+                if (time.id === selectedTime.id) {
+                  return { ...time, interviewCurrentNumber: time.interviewCurrentNumber + 1 };
+                }
+                return time;
+              })
+            };
+          }
+          return dateItem;
+        }));
 
-      Taro.showToast({
-        title: '预约成功',
-        icon: 'success',
-        duration: 2000
-      });
-      setShowConfirmModal(false);
+        console.log('预约信息:', {
+          date: selectedDate,
+          time: selectedTime,
+          id: selectedTime.id
+        });
+
+        Taro.showToast({
+          title: '预约成功',
+          icon: 'success',
+          duration: 2000,
+          success: () => {
+            setTimeout(() => {
+              Taro.navigateBack();
+            }, 2000);
+          }
+        });
+        setShowConfirmModal(false);
+      } catch (error) {
+        // 处理预约失败
+        console.error('预约失败:', error);
+        Taro.showToast({
+          title: error instanceof Error ? error.message : '预约失败，请重试',
+          icon: 'none',
+          duration: 2000
+        });
+      } finally {
+        setSubmitting(false);
+      }
     }
   };
 
@@ -237,7 +266,7 @@ const Interview: FC = () => {
               <View className="time-list">
                 {interviewData
                   .find(item => item.interviewDate === selectedDate)
-                  ?.times.map((time, index) => {
+                  ?.times.map((time) => {
                     const remaining = getRemaining(time);
                     const isSelected = selectedTime?.id === time.id;
                     const isFull = remaining <= 0;
@@ -310,11 +339,19 @@ const Interview: FC = () => {
             </View>
 
             <View className="modal-footer">
-              <Button className="modal-btn cancel-btn" onClick={handleCancel}>
+              <Button
+                className="modal-btn cancel-btn"
+                onClick={handleCancel}
+                disabled={submitting}
+              >
                 取消
               </Button>
-              <Button className="modal-btn confirm-btn" onClick={handleConfirm}>
-                确认预约
+              <Button
+                className="modal-btn confirm-btn"
+                onClick={handleConfirm}
+                disabled={submitting}
+              >
+                {submitting ? '提交中...' : '确认预约'}
               </Button>
             </View>
           </View>
