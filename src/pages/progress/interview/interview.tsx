@@ -3,11 +3,9 @@ import { FC, useState, useEffect } from 'react';
 import Taro from '@tarojs/taro';
 import './interview.scss';
 import '../../../assets/font_5005005_riasjpvkzb/iconfont.css';
-import { InterviewTime, AppointmentParams } from "../../../api/types";
 import { getAllInterviewTime } from "../../../api/index";
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchInterviewTimes, bookAppointment } from "../../../store/interviewSlice";
-import { RootState } from '../../../store/index';
+import { useDispatch } from 'react-redux';
+import { bookAppointment } from "../../../store/interviewSlice";
 import { AppDispatch } from '../../../store'; // 导入正确的dispatch类型
 // 定义处理后的数据类型
 interface ProcessedInterviewData {
@@ -34,8 +32,6 @@ const Interview: FC = () => {
   const [errorMsg, setErrorMsg] = useState<string>('');
   const [submitting, setSubmitting] = useState<boolean>(false); // 新增：提交状态
 
-  // 从 Redux 获取预约状态（可选）
-  const { userAppointmentId } = useSelector((state: RootState) => state.interview);
   // 使用正确的dispatch类型
   const dispatch = useDispatch<AppDispatch>();
   // 页面加载时获取数据
