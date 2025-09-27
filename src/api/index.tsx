@@ -8,6 +8,7 @@ import type {
   ApiResponse,
   UserApplyParams,
   InterviewTime,
+  CancelAppointmentParams,
 } from "./types";
 
 /*用户登录*/
@@ -59,4 +60,21 @@ export const userApply = (
   params: UserApplyParams
 ): Promise<ApiResponse<null>> => {
   return api.post("/api/wx/apply", params);
+};
+
+/* 取消预约面试 */
+export const cancelAppointment = (
+  data: CancelAppointmentParams
+): Promise<ApiResponse<null>> => {
+  const token = Taro.getStorageSync('token') || '';
+  return api.post(
+    "/api/wx/interviews/appointments/cancel",
+    data,
+    {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    }
+  );
 };

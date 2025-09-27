@@ -74,3 +74,9 @@ export interface InterviewTime {
 export interface AppointmentParams {
   appointmentId: number;
 }
+
+/* 取消预约接口 Body 参数 */
+export interface CancelAppointmentParams {
+  id: number;
+  accessType: string;
+}

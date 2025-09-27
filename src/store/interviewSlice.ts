@@ -4,8 +4,9 @@ import {
   getAllInterviewTime,
   userAppointment,
   getAppointmentState,
+  cancelAppointment,
 } from "../api";
-import type { InterviewTime, AppointmentParams } from "../api/types";
+import type { InterviewTime, AppointmentParams, CancelAppointmentParams } from "../api/types";
 
 export interface InterviewState {
   times: InterviewTime[];
@@ -55,6 +56,19 @@ export const fetchAppointmentState = createAsyncThunk<string | null>(
   }
 );
 
+// 添加取消预约的异步Thunk
+export const cancelInterviewAppointment = createAsyncThunk<
+  void,
+  CancelAppointmentParams
+>("interview/cancel", async (data, { dispatch }) => {
+  const response = await cancelAppointment(data);
+  if (response.code === 200) {
+    dispatch(fetchAppointmentState());
+    return;
+  }
+  return Promise.reject(new Error(response.message));
+});
+
 const interviewSlice = createSlice({
   name: "interview",
   initialState,
@@ -78,7 +92,14 @@ const interviewSlice = createSlice({
           typeof appointmentId === "string"
             ? parseInt(appointmentId, 10)
             : appointmentId || null;
-      });
+      })
+      .addCase(cancelInterviewAppointment.fulfilled, (state) => {
+        state.status = "succeeded";
+      })
+    .addCase(cancelInterviewAppointment.rejected, (state, action) => {
+      state.status = "failed";
+      state.error = action.error.message || "取消预约失败";
+    })
   },
 });
 

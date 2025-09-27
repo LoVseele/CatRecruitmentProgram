@@ -3,12 +3,13 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/index";
 import { AppDispatch } from '../../store';
-import { fetchAppointmentState } from "../../store/interviewSlice";
+import { fetchAppointmentState, cancelInterviewAppointment } from "../../store/interviewSlice";
 import { getAllInterviewTime } from "../../api/index";
 import "./progress.scss";
 import proCat from '../../assets/images/process_cat.png'
 import { FC } from "react";
 import { InterviewTime, ApiResponse } from "../../api/types";
+import Taro from '@tarojs/taro';
 
 interface StageInfo {
   state: string | number;
@@ -79,7 +80,90 @@ const Intro: FC<ProProps> = ({
     }
   };
 
-  // 关键修改：添加用户登录状态相关依赖，确保登录状态变化时重新加载数据
+  // 处理取消预约逻辑
+  const handleCancelAppointment = async () => {
+    console.log("进入取消预约处理函数"); // 第一步日志
+
+    // 1. 检查预约ID是否存在（增加详细日志）
+    console.log("当前userAppointmentId值:", userAppointmentId);
+    if (!userAppointmentId) {
+      console.error("终止执行：userAppointmentId为空");
+      Taro.showToast({ title: '未获取到预约信息', icon: 'none' });
+      return;
+    }
+
+    try {
+      // 2. 检查interviewTimes是否有效
+      //console.log("interviewTimes数据:", interviewTimes);
+     // if (!interviewTimes || !Array.isArray(interviewTimes) || interviewTimes.length === 0) {
+       // console.error("终止执行：interviewTimes无效或为空");
+//Taro.showToast({ title: '预约时间数据加载失败', icon: 'none' });
+       // return;
+     // }
+
+      // 3. 获取当前预约对应的accessType
+      const matchedTime = interviewTimes.find(
+        (time: InterviewTime) => time.id === userAppointmentId
+      );
+
+      // 4. 检查匹配结果
+      console.log("找到的匹配时间:", matchedTime);
+      if (!matchedTime) {
+        console.error(`未找到ID为${userAppointmentId}的预约信息`);
+        Taro.showToast({ title: '未找到对应的预约信息', icon: 'none' });
+        return;
+      }
+
+      // 5. 再次确认参数完整性
+      if (!matchedTime.accessType) {
+        console.error("终止执行：accessType为空");
+        Taro.showToast({ title: '预约信息不完整', icon: 'none' });
+        return;
+      }
+
+      // 6. 调用取消预约接口（增加接口调用日志）
+      console.log("开始调用取消接口，参数:", {
+        id: userAppointmentId,
+        accessType: matchedTime.accessType
+      });
+      const response =  await dispatch(cancelInterviewAppointment({
+        id: userAppointmentId,
+        accessType: matchedTime.accessType
+      })).unwrap();
+      // 或直接打印整个响应，查看完整结构
+      console.log("接口成功响应数据：", response);
+      // 7. 操作成功处理
+      Taro.showToast({ title: '取消预约成功', icon: 'success' });
+      console.log("取消成功，开始刷新数据");
+      loadAllData();
+
+    } catch (error) {
+      // 8. 完善错误处理
+      console.error('取消预约失败:', error);
+      const errorMsg = error instanceof Error
+        ? error.message
+        : typeof error === 'string'
+          ? error
+          : '取消预约失败，请稍后重试';
+      Taro.showToast({
+        title: errorMsg,
+        icon: 'none',
+        duration: 3000
+      });
+    }
+  };
+
+  // 判断是否显示取消预约按钮（根据是否有预约信息）
+  const shouldShowCancel = () => {
+    // 核心逻辑：只要存在有效的预约ID，就认为有预约信息，显示取消按钮
+    const hasAppointment = !!userAppointmentId; // 用双感叹号转为布尔值（存在则为true）
+
+    // 打印日志确认判断依据
+    console.log("是否显示取消按钮:", hasAppointment);
+    console.log("判断依据（预约ID是否存在）:", { userAppointmentId });
+
+    return hasAppointment;
+  };
   useEffect(() => {
     // 每次组件挂载/更新时都刷新数据
     loadAllData();
@@ -147,6 +231,18 @@ const Intro: FC<ProProps> = ({
       >
         <Text>当前阶段: {matchedStage.text}</Text>
         <Text className="Intro">{displayIntro}</Text>
+
+        {shouldShowCancel() && (
+          <View
+            className="cancel-appointment"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleCancelAppointment();
+            }}
+          >
+            <Text>取消预约</Text>
+          </View>
+        )}
       </View>
     </View>
   );

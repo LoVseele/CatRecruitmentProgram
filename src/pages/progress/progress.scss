@@ -41,3 +41,19 @@
     margin-top: 2vw;
     font-size: 4vw;
 }
+
+.cancel-appointment {
+    margin-top: 30rpx;
+    color: #ff4d4f; // 红色文字表示警告
+    font-size: 50rpx;
+    text-decoration: underline;
+    padding: 5px 0;
+    cursor: pointer;
+}
+
+// 避免点击取消按钮时触发父元素的跳转
+.progress-content {
+    >view {
+        pointer-events: auto;
+    }
+}
