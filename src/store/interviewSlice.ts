@@ -1,22 +1,20 @@
-// src/store/interviewSlice.ts
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
   getAllInterviewTime,
   userAppointment,
   getAppointmentState,
-  userCancelAppointment, // 1. 导入取消预约的 API 函数
+  userCancelAppointment,
 } from "../api";
 import type {
   InterviewTime,
   AppointmentParams,
-  CancelAppointmentParams, // 2. 导入取消预约的参数类型
+  CancelAppointmentParams,
 } from "../api/types";
-import { AppDispatch } from ".";
+import { AppDispatch, RootState } from ".";
+import { fetchUserInfo } from "./userSlice";
 
 export interface InterviewState {
-  // 所有的预约时间段（初面、一面、二面都有）
   interviewTimes: InterviewTime[];
-  // 用户当前预约的时间段id
   userAppointmentId: number | null;
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
@@ -29,7 +27,6 @@ const initialState: InterviewState = {
   error: null,
 };
 
-// 获取所有面试时间
 export const fetchInterviewTimes = createAsyncThunk<InterviewTime[]>(
   "interview/fetchTimes",
   async () => {
@@ -45,12 +42,20 @@ export const fetchInterviewTimes = createAsyncThunk<InterviewTime[]>(
 export const bookAppointment = createAsyncThunk<
   number | undefined,
   AppointmentParams,
-  { dispatch: AppDispatch }
->("interview/book", async (params, { dispatch }) => {
+  { dispatch: AppDispatch; state: RootState }
+>("interview/book", async (params, { dispatch, getState }) => {
+  // 3. 从 thunkAPI 中解构出 getState
   const response = await userAppointment(params);
   if (response.code === 200) {
     // 预约成功后，立即更新预约状态
     dispatch(fetchAppointmentState());
+
+    // 重新获取用户信息以更新状态
+    const { user } = getState();
+    if (user.userInfo?.openId) {
+      dispatch(fetchUserInfo(user.userInfo.openId));
+    }
+
     return params.appointmentId;
   }
   return Promise.reject(new Error(response.message));
@@ -63,7 +68,6 @@ export const fetchAppointmentState = createAsyncThunk<
   { dispatch: AppDispatch }
 >("interview/fetchState", async (_, { dispatch }) => {
   const response = await getAppointmentState();
-  console.log("预约状态", response);
   if (response.code === 200) {
     if (response.data) {
       dispatch(fetchInterviewTimes());
@@ -77,12 +81,17 @@ export const fetchAppointmentState = createAsyncThunk<
 export const cancelAppointment = createAsyncThunk<
   void,
   CancelAppointmentParams,
-  { dispatch: AppDispatch }
->("interview/cancel", async (params, { dispatch }) => {
+  { dispatch: AppDispatch; state: RootState }
+>("interview/cancel", async (params, { dispatch, getState }) => {
   const response = await userCancelAppointment(params);
   if (response.code === 200) {
-    // 取消成功后，清空本地的预约状态
     dispatch(fetchAppointmentState());
+
+    // 重新获取用户信息以更新状态
+    const { user } = getState();
+    if (user.userInfo?.openId) {
+      dispatch(fetchUserInfo(user.userInfo.openId));
+    }
   } else {
     return Promise.reject(new Error(response.message));
   }
@@ -117,7 +126,6 @@ const interviewSlice = createSlice({
       })
       .addCase(cancelAppointment.fulfilled, (state) => {
         state.status = "succeeded";
-        // 取消成功后，将本地的预约ID置为null
         state.userAppointmentId = null;
       })
       .addCase(cancelAppointment.rejected, (state, action) => {

@@ -41,7 +41,7 @@ const stageData: StageInfo[] = [
   {
     state: "初面通过",
     text: "面试通过",
-    intro: "面试通过啦! 好好准备面对一轮!",
+    intro: "面试通过啦! 点我预约一面时间吧",
     style: { bottom: "58%", left: "36%" },
   },
   {
@@ -59,19 +59,19 @@ const stageData: StageInfo[] = [
   {
     state: "一轮考核通过",
     text: "一轮考核通过!",
-    intro: "一轮考核通过啦! 离胜利不远了!",
+    intro: "一轮考核通过啦! 点我预约二面时间吧",
     style: { bottom: "71%", left: "51%" },
   },
   {
     state: "二面",
     text: "二轮面试",
-    intro: "二面开始啦，点我预约一面时间吧",
+    intro: "二面开始啦，点我预约二面时间吧",
     style: { bottom: "71%", left: "51%" },
   },
   {
     state: "二轮考核",
     text: "二轮面试",
-    intro: "二面开始啦，点我预约一面时间吧",
+    intro: "二面开始啦，点我预约二面时间吧",
     style: { bottom: "71%", left: "51%" },
   },
   {
@@ -147,7 +147,7 @@ const Intro: FC<ProProps> = ({ onGoToRegistration, onGoToInterview }) => {
 
   useEffect(() => {
     // 符合条件的才显示预约了的时间段
-    const timeRequiredStates = ["初面", "一面", "一轮考核", "二轮考核", "二面"];
+    const timeRequiredStates = ["初面", "一面", "初面通过", "一面通过", "二面"];
     const currentState = userInfo?.state;
 
     //这里是对条件的筛选
@@ -242,8 +242,8 @@ const Intro: FC<ProProps> = ({ onGoToRegistration, onGoToInterview }) => {
           const canGoToInterviewStates = [
             "初面",
             "一面",
-            "一轮考核",
-            "二轮考核",
+            "初面通过",
+            "一面通过",
             "二面",
           ];
 
