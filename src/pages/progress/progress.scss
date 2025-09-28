@@ -1,43 +1,55 @@
 .progress {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .progress-show {
-    position: relative;
-    margin: 20vh 0 0;
-    width: 90vw;
-    height: calc(90vw*0.8);
-    background-image: url(../../assets/images/process.png);
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-size: contain;
+  position: relative;
+  margin: 20vh 0 0;
+  width: 90vw;
+  height: calc(90vw * 0.8);
+  background-image: url(../../assets/images/process.png);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: contain;
 }
 
 .proCat {
-    position: absolute;
-    width: 4vw;
-    height: 5vw;
+  position: absolute;
+  width: 4vw;
+  height: 5vw;
 }
 
 .progress-content {
-    display: flex;
-    flex-direction: column;
-    padding-bottom: 20vw;
-    width: 60vw;
-    height: 60vw;
-    background-image: url(../../assets/images/notice.png);
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    justify-content: center;
-    font-size: 6vw;
-    font-weight: bold;
-    font-family: 'Courier New', Courier, monospace;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 20vw;
+  width: 60vw;
+  height: 60vw;
+  background-image: url(../../assets/images/notice.png);
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  justify-content: center;
+  font-size: 6vw;
+  font-weight: bold;
+  font-family: "Courier New", Courier, monospace;
 }
 
 .Intro {
-    margin-top: 2vw;
-    font-size: 4vw;
+  margin-top: 2vw;
+  font-size: 4vw;
+}
+
+.cancel-appointment-btn {
+  margin-top: 20rpx;
+  padding: 1rpx 50rpx;
+  border-radius: 40rpx;
+  font-size: 36rpx;
+  border: none;
+  color: white;
+  background-color: #f4c836;
+  font-family: "Courier New", Courier, monospace;
+  cursor: pointer;
 }

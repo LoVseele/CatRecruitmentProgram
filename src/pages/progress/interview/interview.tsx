@@ -1,13 +1,14 @@
-import { View, Text, Button, Picker } from '@tarojs/components';
-import { FC, useState, useEffect } from 'react';
-import Taro from '@tarojs/taro';
-import './interview.scss';
-import '../../../assets/font_5005005_riasjpvkzb/iconfont.css';
+import { View, Text, Button, Picker } from "@tarojs/components";
+import { FC, useState, useEffect, useMemo } from "react";
+import Taro from "@tarojs/taro";
+import "./interview.scss";
+import "../../../assets/font_5005005_riasjpvkzb/iconfont.css";
 import { getAllInterviewTime } from "../../../api/index";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from "react-redux";
 import { bookAppointment } from "../../../store/interviewSlice";
-import { AppDispatch } from '../../../store'; // 导入正确的dispatch类型
-// 定义处理后的数据类型
+import { AppDispatch, RootState } from "../../../store";
+
+// ... (interface ProcessedInterviewData 定义)
 interface ProcessedInterviewData {
   interviewDate: string;
   times: Array<{
@@ -15,12 +16,15 @@ interface ProcessedInterviewData {
     interviewNumber: number;
     interviewCurrentNumber: number;
     id: number;
+    accessType: string;
   }>;
 }
+
 const Interview: FC = () => {
-  // 状态管理
-  const [interviewData, setInterviewData] = useState<ProcessedInterviewData[]>([]);
-  const [selectedDate, setSelectedDate] = useState<string>('');
+  const [interviewData, setInterviewData] = useState<ProcessedInterviewData[]>(
+    []
+  );
+  const [selectedDate, setSelectedDate] = useState<string>("");
   const [selectedTime, setSelectedTime] = useState<{
     interviewTime: string;
     interviewNumber: number;
@@ -29,30 +33,29 @@ const Interview: FC = () => {
   } | null>(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [loading, setLoading] = useState<boolean>(true);
-  const [errorMsg, setErrorMsg] = useState<string>('');
-  const [submitting, setSubmitting] = useState<boolean>(false); // 新增：提交状态
+  const [errorMsg, setErrorMsg] = useState<string>("");
+  const [submitting, setSubmitting] = useState<boolean>(false);
 
-  // 使用正确的dispatch类型
   const dispatch = useDispatch<AppDispatch>();
+  const { userInfo } = useSelector((state: RootState) => state.user);
+
   // 页面加载时获取数据
   useEffect(() => {
     const loadData = async () => {
       try {
         setLoading(true);
         const response = await getAllInterviewTime();
-        console.log('API响应:', response);
-        // 检查响应结构
         if (response && response.code === 200 && response.data) {
           const processedData = processRawInterviewData(response.data);
           setInterviewData(processedData);
-          setErrorMsg('');
+          setErrorMsg("");
         } else {
-          console.error('API响应格式错误:', response);
-          setErrorMsg('数据格式错误，请稍后重试');
+          console.error("API响应格式错误:", response);
+          setErrorMsg("数据格式错误，请稍后重试");
         }
       } catch (error) {
-        console.error('获取数据异常:', error);
-        setErrorMsg(error instanceof Error ? error.message : '获取数据失败');
+        console.error("获取数据异常:", error);
+        setErrorMsg(error instanceof Error ? error.message : "获取数据失败");
       } finally {
         setLoading(false);
       }
@@ -61,20 +64,58 @@ const Interview: FC = () => {
     loadData();
   }, []);
 
+  // 使用 useMemo 进行数据筛选
+  const filteredInterviewData = useMemo(() => {
+    if (!userInfo?.state || !interviewData.length) {
+      return [];
+    }
+
+    // 定义状态映射关系
+    const stateToAccessTypeMap: { [key: string]: string[] } = {
+      已报名: ["初面"],
+      初面: ["初面"],
+      一面: ["一面", "一轮考核"],
+      一轮考核: ["一面", "一轮考核"],
+      二面: ["二面", "二轮考核"],
+      二轮考核: ["二面", "二轮考核"],
+    };
+
+    // 根据用户当前状态获取所有等价的面试类型
+    const equivalentAccessTypes = stateToAccessTypeMap[userInfo.state] || [
+      userInfo.state,
+    ];
+
+    // 根据等价的面试类型来筛选面试时间
+    return interviewData
+      .map((dateItem) => {
+        const filteredTimes = dateItem.times.filter((time) =>
+          equivalentAccessTypes.includes(time.accessType)
+        );
+        return {
+          ...dateItem,
+          times: filteredTimes,
+        };
+      })
+      .filter((dateItem) => dateItem.times.length > 0);
+  }, [interviewData, userInfo?.state]);
+
+  // 当筛选后的数据变化时，重置选择
+  useEffect(() => {
+    setSelectedDate("");
+    setSelectedTime(null);
+  }, [filteredInterviewData]);
+
   // 处理原始接口数据
-  const processRawInterviewData = (rawData: any[]): ProcessedInterviewData[] => {
-    const dateMap = new Map<string, ProcessedInterviewData['times']>();
+  const processRawInterviewData = (
+    rawData: any[]
+  ): ProcessedInterviewData[] => {
+    const dateMap = new Map<string, ProcessedInterviewData["times"]>();
 
-    rawData.forEach(item => {
-      // 格式化日期
-      const interviewDate = item.appointmentDate.split('T')[0];
-
-      // 格式化时间范围
+    rawData.forEach((item) => {
+      const interviewDate = item.appointmentDate.split("T")[0];
       const startTime = formatTime(item.startTime);
       const endTime = formatTime(item.endTime);
       const interviewTime = `${startTime}-${endTime}`;
-
-      // 转换数值
       const interviewNumber = parseInt(item.capacity, 10) || 0;
       const interviewCurrentNumber = parseInt(item.appointedCount, 10) || 0;
 
@@ -86,27 +127,30 @@ const Interview: FC = () => {
         interviewTime,
         interviewNumber,
         interviewCurrentNumber,
-        id: parseInt(item.id, 10) || 0, // 转为数字（确保是有效数字）
+        id: parseInt(item.id, 10) || 0,
+        accessType: item.accessType,
       });
     });
 
-    // 按日期排序
     return Array.from(dateMap.entries())
       .map(([interviewDate, times]) => ({
         interviewDate,
-        times: times.sort((a, b) => a.interviewTime.localeCompare(b.interviewTime))
+        times: times.sort((a, b) =>
+          a.interviewTime.localeCompare(b.interviewTime)
+        ),
       }))
       .sort((a, b) => a.interviewDate.localeCompare(b.interviewDate));
   };
 
   // 辅助函数：格式化时间
-  const formatTime = (isoTime: string): string => {
+  const formatTime = (timeString: string): string => {
     try {
-      const date = new Date(isoTime);
-      return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+      // 直接从 "HH:mm:ss" 格式中提取小时和分钟
+      const [hours, minutes] = timeString.split(":");
+      return `${hours}:${minutes}`;
     } catch (error) {
-      console.error('时间格式化错误:', isoTime, error);
-      return '00:00';
+      console.error("时间格式化错误:", timeString, error);
+      return "00:00";
     }
   };
 
@@ -124,8 +168,8 @@ const Interview: FC = () => {
   // 选择日期
   const handleDateSelect = (e: any) => {
     const index = Number(e.detail.value);
-    if (interviewData[index]) {
-      setSelectedDate(interviewData[index].interviewDate);
+    if (filteredInterviewData[index]) {
+      setSelectedDate(filteredInterviewData[index].interviewDate);
       setSelectedTime(null);
     }
   };
@@ -141,9 +185,9 @@ const Interview: FC = () => {
       setShowConfirmModal(true);
     } else {
       Taro.showToast({
-        title: '请先选择日期和时间',
-        icon: 'none',
-        duration: 1500
+        title: "请先选择日期和时间",
+        icon: "none",
+        duration: 1500,
       });
     }
   };
@@ -159,53 +203,58 @@ const Interview: FC = () => {
       setSubmitting(true);
       try {
         // 准备预约参数
-        const appointmentParams= {
+        const appointmentParams = {
           appointmentId: selectedTime.id,
         };
-        console.log('传到后端的预约信息:', appointmentParams);
+        console.log("传到后端的预约信息:", appointmentParams);
         // 调用Redux异步操作
         await dispatch(bookAppointment(appointmentParams)).unwrap();
 
         // 更新本地状态中的剩余数量
-        setInterviewData(prev => prev.map(dateItem => {
-          if (dateItem.interviewDate === selectedDate) {
-            return {
-              ...dateItem,
-              times: dateItem.times.map(time => {
-                if (time.id === selectedTime.id) {
-                  return { ...time, interviewCurrentNumber: time.interviewCurrentNumber + 1 };
-                }
-                return time;
-              })
-            };
-          }
-          return dateItem;
-        }));
+        setInterviewData((prev) =>
+          prev.map((dateItem) => {
+            if (dateItem.interviewDate === selectedDate) {
+              return {
+                ...dateItem,
+                times: dateItem.times.map((time) => {
+                  if (time.id === selectedTime.id) {
+                    return {
+                      ...time,
+                      interviewCurrentNumber: time.interviewCurrentNumber + 1,
+                    };
+                  }
+                  return time;
+                }),
+              };
+            }
+            return dateItem;
+          })
+        );
 
-        console.log('预约信息:', {
+        console.log("预约信息:", {
           date: selectedDate,
           time: selectedTime,
-          id: selectedTime.id
+          id: selectedTime.id,
         });
 
         Taro.showToast({
-          title: '预约成功',
-          icon: 'success',
+          title: "预约成功",
+          icon: "success",
           duration: 2000,
           success: () => {
             setTimeout(() => {
               Taro.navigateBack();
             }, 2000);
-          }
+          },
         });
         setShowConfirmModal(false);
       } catch (error) {
         // 处理预约失败
-        console.error('预约失败:', error);
+        console.error("预约失败:", error);
         Taro.showToast({
-          title: error instanceof Error ? error.message : '预约失败，请重试',
-          icon: 'none',
-          duration: 2000
+          title: error instanceof Error ? error.message : "预约失败，请重试",
+          icon: "none",
+          duration: 2000,
         });
       } finally {
         setSubmitting(false);
@@ -215,7 +264,7 @@ const Interview: FC = () => {
 
   return (
     <View className="interview-page">
-      {/* 页面头部 */}
+      {/* ... (页面头部、加载、错误状态) ... */}
       <View className="page-header">
         <Button className="back-btn iconfont" onClick={handleGoBack}>
           &#xe632;
@@ -238,30 +287,28 @@ const Interview: FC = () => {
         </View>
       )}
 
-      {/* 主要内容区 */}
-      {!loading && !errorMsg && interviewData.length > 0 && (
+      {/* 主要内容区 - 使用 filteredInterviewData */}
+      {!loading && !errorMsg && filteredInterviewData.length > 0 && (
         <View className="interview-content">
-          {/* 日期选择 */}
           <View className="date-selector">
             <Text className="form-label">选择日期</Text>
             <Picker
-              range={interviewData.map(item => item.interviewDate)}
+              range={filteredInterviewData.map((item) => item.interviewDate)}
               onChange={handleDateSelect}
             >
               <View className="picker-display">
-                {selectedDate || '请选择日期'}
+                {selectedDate || "请选择日期"}
                 <Text className="iconfont arrow-icon">&#xe602;</Text>
               </View>
             </Picker>
           </View>
 
-          {/* 时间选择列表 */}
           {selectedDate && (
             <View className="time-selector">
               <Text className="form-label">选择时间段</Text>
               <View className="time-list">
-                {interviewData
-                  .find(item => item.interviewDate === selectedDate)
+                {filteredInterviewData
+                  .find((item) => item.interviewDate === selectedDate)
                   ?.times.map((time) => {
                     const remaining = getRemaining(time);
                     const isSelected = selectedTime?.id === time.id;
@@ -270,19 +317,23 @@ const Interview: FC = () => {
                     return (
                       <View
                         key={time.id}
-                        className={`time-item ${isSelected ? 'selected' : ''} ${isFull ? 'full' : ''}`}
+                        className={`time-item ${isSelected ? "selected" : ""} ${
+                          isFull ? "full" : ""
+                        }`}
                         onClick={() => !isFull && handleTimeSelect(time)}
                       >
                         <View className="time-info">
-                          <Text className="time-range">{time.interviewTime}</Text>
+                          <Text className="time-range">
+                            {time.interviewTime}
+                          </Text>
                           <Text className="remaining-text">
-                            {isFull ? '已满员' : ` 剩余 ${remaining} 人`}
+                            {isFull ? "已满员" : ` 剩余 ${remaining} 人`}
                           </Text>
                         </View>
 
                         {!isFull && (
                           <Button className="select-btn">
-                            {isSelected ? '已选择' : '选择'}
+                            {isSelected ? "已选择" : "选择"}
                           </Button>
                         )}
                       </View>
@@ -292,12 +343,8 @@ const Interview: FC = () => {
             </View>
           )}
 
-          {/* 确认预约按钮 */}
           {selectedTime && getRemaining(selectedTime) > 0 && (
-            <Button
-              className="confirm-btn"
-              onClick={handleShowConfirm}
-            >
+            <Button className="confirm-btn" onClick={handleShowConfirm}>
               确认预约
             </Button>
           )}
@@ -305,13 +352,13 @@ const Interview: FC = () => {
       )}
 
       {/* 空数据状态 */}
-      {!loading && !errorMsg && interviewData.length === 0 && (
+      {!loading && !errorMsg && filteredInterviewData.length === 0 && (
         <View className="empty-state">
-          <Text>暂无可用面试时间</Text>
+          <Text>暂无与您当前阶段匹配的面试时间</Text>
         </View>
       )}
 
-      {/* 确认弹窗 */}
+      {/* ... (确认弹窗) ... */}
       {showConfirmModal && selectedTime && (
         <View className="custom-modal-overlay">
           <View className="custom-modal">
@@ -347,7 +394,7 @@ const Interview: FC = () => {
                 onClick={handleConfirm}
                 disabled={submitting}
               >
-                {submitting ? '提交中...' : '确认预约'}
+                {submitting ? "提交中..." : "确认预约"}
               </Button>
             </View>
           </View>

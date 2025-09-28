@@ -22,7 +22,6 @@ const setupInterceptors = (instance: AxiosInstance) => {
   instance.interceptors.request.use(
     (config) => {
       Taro.showLoading({ title: "加载中..." });
-
       // 注入 token
       const token = Taro.getStorageSync("token");
       if (token) {
