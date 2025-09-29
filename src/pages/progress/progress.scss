@@ -15,10 +15,24 @@
   background-size: contain;
 }
 
+@keyframes float {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
 .proCat {
   position: absolute;
   width: 4vw;
   height: 5vw;
+  transition: all 0.5s ease-in-out;
+  animation: float 1.5s ease-in-out infinite;
 }
 
 .progress-content {

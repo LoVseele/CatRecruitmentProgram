@@ -37,11 +37,15 @@ const ProLogic: FC = () => {
 
   // --- 页面跳转逻辑  ---
   const handleGoToRegistration = () => {
-    Taro.navigateTo({
-      url: "/pages/profile/registration/registration",
-    }).catch((err) => {
-      console.error("跳转报名信息失败:", err);
-    });
+    if (loggedIn) {
+      Taro.navigateTo({
+        url: "/pages/profile/registration/registration",
+      }).catch((err) => {
+        console.error("跳转报名信息失败:", err);
+      });
+    } else {
+      setLoginModalVisible(true);
+    }
   };
 
   const handleGoToNotifications = () => {
