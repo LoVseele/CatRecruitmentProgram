@@ -1,4 +1,4 @@
-import { api } from "../utils/request";
+import { api } from "./request";
 import Taro from "@tarojs/taro";
 import type {
   LoginParams,

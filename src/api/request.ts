@@ -2,7 +2,6 @@ import axios, { AxiosAdapter, AxiosInstance } from "axios";
 import Taro from "@tarojs/taro";
 import mpAdapter from "axios-miniprogram-adapter";
 
-// ----------- 工具函数 -------------
 // 保证对象是最原始的 PlainObject（去掉 Proxy / 原型 / axios 内部结构）
 function ensurePlainObject(obj: any): Record<string, string> {
   return JSON.parse(JSON.stringify(obj ?? {}));

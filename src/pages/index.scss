@@ -13,3 +13,40 @@
   margin-bottom: 15rpx;
   display: block;
 }
+
+page {
+  background-color: rgb(255, 243, 197);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-header {
+  height: 170rpx;
+  width: 100%;
+  background-color: rgb(254, 213, 48);
+  position: relative;
+}
+
+.title {
+  position: absolute;
+  left: 50%;
+  top: 70%;
+  transform: translate(-50%, -50%);
+  font-weight: 700;
+  font-size: 40rpx;
+  margin: 0;
+}
+
+.back-btn {
+  position: absolute;
+  left: 20rpx;
+  top: 70%;
+  transform: translateY(-50%);
+  background-color: rgb(254, 213, 48);
+  font-size: 35rpx;
+}
+
+wx-button:after {
+  border: none !important;
+}

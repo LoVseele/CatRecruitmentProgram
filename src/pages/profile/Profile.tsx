@@ -1,6 +1,7 @@
 import { View, Text, Image, Button } from "@tarojs/components";
 import { FC } from "react";
 import "./profile.scss";
+import "../index.scss";
 import UserAvatar from "../../assets/images/avatar.png"; // 引入一个默认头像
 import { User } from "@/api/types";
 

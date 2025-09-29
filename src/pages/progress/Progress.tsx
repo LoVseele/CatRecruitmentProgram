@@ -7,6 +7,7 @@ import {
   cancelAppointment,
 } from "../../store/interviewSlice";
 import "./progress.scss";
+import "../index.scss";
 import proCat from "../../assets/images/process_cat.png";
 import { FC } from "react";
 import { InterviewTime } from "../../api/types";

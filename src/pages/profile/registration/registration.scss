@@ -1,40 +1,3 @@
-page {
-  background-color: rgb(255, 243, 197);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-.page-header {
-  height: 170rpx;
-  width: 100%;
-  background-color: rgb(221, 189, 62);
-  position: relative;
-}
-
-.title {
-  position: absolute;
-  left: 50%;
-  top: 70%;
-  transform: translate(-50%, -50%);
-  font-weight: 700;
-  font-size: 40rpx;
-  margin: 0;
-}
-
-.back-btn {
-  position: absolute;
-  left: 20rpx;
-  top: 70%;
-  transform: translateY(-50%);
-  background-color: rgb(221, 189, 62);
-  font-size: 35rpx;
-}
-
-wx-button:after {
-  border: none !important;
-}
-
 .registration-page {
   flex: 1;
   display: flex;
@@ -48,7 +11,7 @@ wx-button:after {
   text-align: center;
   justify-content: center;
   font-size: 40rpx;
-  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
 }
 
 .content {
@@ -91,7 +54,7 @@ wx-button:after {
   flex: 2;
   padding: 9rpx 0rpx;
   text-align: center;
-  border: 1rpx solid rgb(221, 189, 62);
+  border: 1rpx solid rgb(254, 213, 48);
   border-radius: 15rpx;
   transition: all 0.3s ease;
 }
@@ -104,7 +67,7 @@ wx-button:after {
   text-align: center;
   padding: 15rpx 20rpx;
   /* 统一内边距 */
-  border: 1rpx solid rgb(221, 189, 62);
+  border: 1rpx solid rgb(254, 213, 48);
   border-radius: 15rpx;
   /* 解决textarea与其他输入框对齐问题 */
   margin-top: 10rpx;
@@ -145,7 +108,7 @@ wx-button:after {
 }
 
 .submit-btn {
-  background-color: #4CAF50;
+  background-color: #4caf50;
 }
 
 .reset-btn {
